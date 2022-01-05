@@ -1,0 +1,63 @@
+name: spendzz
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons:
+  flutter_easyloading:
+  fluttertoast:
+  form_field_validator:
+  carousel_slider: ^4.0.0
+  page_transition:
+  flutter_rating_bar:
+  page_indicator:
+  flutter_switch:
+  material_segmented_control: ^3.1.2
+  animated_custom_dropdown:
+  shared_preferences:
+  flutter_html:
+  http:
+  timer_button:
+  confetti: ^0.5.5
+  flutter_countdown_timer:
+  group_radio_button:
+  loading_gifs:
+  loading_indicator:
+  flutter_spinkit:
+  email_validator:
+  image_picker:
+  progress_dialog_null_safe:
+  mime:
+  geolocator:
+  geocoding:
+  crop:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: CM Sans Serif
+      fonts:
+        - asset: assets/fonts/cm_sans_serif_2012.ttf
+    - family: Rubik
+      fonts:
+        - asset: assets/fonts/Rubik-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Rubik-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Rubik-Medium.ttf
+        - asset: assets/fonts/Rubik-Regular.ttf
+
