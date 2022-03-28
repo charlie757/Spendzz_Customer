@@ -20,12 +20,12 @@ dependencies:
   page_indicator:
   flutter_switch:
   material_segmented_control: ^3.1.2
-  animated_custom_dropdown:
+  image_cropper:
   shared_preferences:
   flutter_html:
   http:
   timer_button:
-  confetti: ^0.5.5
+  confetti: ^0.6.0
   flutter_countdown_timer:
   group_radio_button:
   loading_gifs:
@@ -37,7 +37,24 @@ dependencies:
   mime:
   geolocator:
   geocoding:
-  crop:
+  razorpay_flutter:
+  image_crop:
+  cached_network_image:
+  camera: ^0.9.4+4
+  url_launcher:
+  share: ^2.0.4
+  open_file: ^3.2.1
+  webview_flutter: ^3.0.0
+  invoiceninja: ^0.0.9
+  file_support: ^1.0.3+6
+  get:
+  flutter_pin_code_fields: ^1.1.0
+  shimmer: ^2.0.0
+  qr_code_scanner:
+  flutter_contacts:
+  connectivity_plus: ^1.0.6
+  data_connection_checker:
+  internet_connection_checker:
   flutter_test:
     sdk: flutter
 

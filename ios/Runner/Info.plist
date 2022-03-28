@@ -7,6 +7,10 @@
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>Needed to access location</string>
 
+    <key>NSCameraUsageDescription</key>
+        <string>Can I use the camera please?</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Can I use the mic please?</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -46,5 +50,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<key>io.flutter.embedded_views_preview</key>
+    <true/>
+    <key>NSCameraUsageDescription</key>
+    <string>This app needs camera access to scan QR codes</string>
+
 </dict>
 </plist>
