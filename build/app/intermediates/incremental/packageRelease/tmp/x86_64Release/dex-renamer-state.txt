@@ -1,0 +1,4 @@
+#Fri May 06 09:36:30 IST 2022
+base.0=C\:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

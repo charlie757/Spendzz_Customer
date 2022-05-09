@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _Refer_Earn_ScreenState extends State<Refer_Earn_Screen> {
     super.initState();
     _checkToken();
   }
+
   _checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('AUTH_TOKEN') != null) {
@@ -35,6 +37,7 @@ class _Refer_Earn_ScreenState extends State<Refer_Earn_Screen> {
 
     setState(() {});
   }
+
   _callReferralCode(String tokenData) async {
     var client = http.Client();
     EasyLoading.show(status: 'loading...');
@@ -49,14 +52,38 @@ class _Refer_Earn_ScreenState extends State<Refer_Earn_Screen> {
       print(dataAll);
       EasyLoading.dismiss();
       if (uriResponse.statusCode == 200) {
-        inviteCode=dataAll['data']['referral_code'].toString();
-        setState(() {
-        });
+        inviteCode = dataAll['data']['referral_code'].toString();
+        setState(() {});
       }
     } finally {
       client.close();
     }
   }
+
+  openwhatsapp() async {
+    var whatsapp = "+919782485409";
+    var whatsappURl_android =
+        "whatsapp://send?phone=" + whatsapp + "&text=hello";
+    var whatappURL_ios = "https://wa.me/$whatsapp?text=${Uri.parse("hello")}";
+    if (Platform.isIOS) {
+      // for iOS phone only
+      if (await canLaunch(whatappURL_ios)) {
+        await launch(whatappURL_ios, forceSafariVC: false);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: new Text("whatsapp no installed")));
+      }
+    } else {
+      // android , web
+      if (await canLaunch(whatsappURl_android)) {
+        await launch(whatsappURl_android);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: new Text("whatsapp no installed")));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -120,11 +147,10 @@ class _Refer_Earn_ScreenState extends State<Refer_Earn_Screen> {
                   height: 15,
                 ),
                 GestureDetector(
-                  onTap: ()
-                  {
+                  onTap: () {
                     _launchWhatsapp();
                   },
-                  child:  Container(
+                  child: Container(
                     padding: EdgeInsets.only(left: 20, right: 25),
                     child: Row(
                       children: [
@@ -155,7 +181,7 @@ class _Refer_Earn_ScreenState extends State<Refer_Earn_Screen> {
                 SizedBox(height: 20.0),
                 Align(
                   alignment: Alignment.center,
-                  child:  Container(
+                  child: Container(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,70 +189,76 @@ class _Refer_Earn_ScreenState extends State<Refer_Earn_Screen> {
                         Text(
                           'Your referral Code',
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 17.0
-                          ),
+                              fontWeight: FontWeight.w600, fontSize: 17.0),
                         ),
                         SizedBox(height: 15.0),
                         Container(
-                          width: 190, height: 50.0,
+                          width: 190,
+                          height: 50.0,
                           decoration: BoxDecoration(
                               color: Color(0xffF1F0F8),
                               borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all(color: Colors.grey, width: 1.0)
-                          ),
+                              border:
+                                  Border.all(color: Colors.grey, width: 1.0)),
                           alignment: Alignment.center,
                           child: Text(
                             inviteCode,
                             style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 18.0
-                            ),
+                                fontWeight: FontWeight.w600, fontSize: 18.0),
                           ),
                         ),
                         SizedBox(height: 15.0),
                         GestureDetector(
-                          onTap: ()
-                          {
-                          //Clipboard.setData(ClipboardData(text: inviteCode));
-                            Clipboard.setData(new ClipboardData(text: inviteCode)).then((_){
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(inviteCode)));
+                          onTap: () {
+                            //Clipboard.setData(ClipboardData(text: inviteCode));
+                            Clipboard.setData(
+                                    new ClipboardData(text: inviteCode))
+                                .then((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(inviteCode)));
                             });
-                               //only if ->
-                          //ScaffoldMessenger.of(context).showSnackBar(snackBar));
+                            //only if ->
+                            //ScaffoldMessenger.of(context).showSnackBar(snackBar));
                           },
                           child: Text(
                             'Tap to copy',
                             style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 13.0, color: kYellowColor
-                            ),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13.0,
+                                color: kYellowColor),
                           ),
                         ),
                         SizedBox(height: 20.0),
                         GestureDetector(
-                          onTap: ()
-                          {
-                            Share.share("Your Refer Code "+inviteCode +"\n"+ "https://play.google.com/store/apps/details?id=com.spendzz_merchant");
-                           // launch("https://play.google.com/store/apps/details?id=com.spendzz_merchant" + "Your Refer Code"+inviteCode);
-
+                          onTap: () {
+                            Share.share("Your Refer Code " +
+                                inviteCode +
+                                "\n" +
+                                "https://play.google.com/store/apps/details?id=com.spendzz_customer_merchant");
+                            // launch("https://play.google.com/store/apps/details?id=com.spendzz_customer_merchant" + "Your Refer Code"+inviteCode);
                           },
                           child: Container(
-                            width: 190, height: 46.0,
+                            width: 190,
+                            height: 46.0,
                             decoration: BoxDecoration(
                                 color: kYellowColor,
                                 borderRadius: BorderRadius.circular(5.0),
-                                border: Border.all(color: Colors.grey, width: 1.0)
-                            ),
+                                border:
+                                    Border.all(color: Colors.grey, width: 1.0)),
                             alignment: Alignment.center,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(Icons.share_rounded, color: Colors.white, size: 18.0),
+                                Icon(Icons.share_rounded,
+                                    color: Colors.white, size: 18.0),
                                 SizedBox(width: 10.0),
                                 Text(
                                   'Refer Now',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w600, fontSize: 14.0, color: Colors.white
-                                  ),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.0,
+                                      color: Colors.white),
                                 )
                               ],
                             ),
@@ -254,23 +286,31 @@ class _Refer_Earn_ScreenState extends State<Refer_Earn_Screen> {
     );
   }
 
+  void _launchUrl() async {}
   _launchWhatsapp() async {
-    //var url ="https://wa.me/?text=${Uri.parse("Your Refer Code"+inviteCode)}";
-    //launch("https://play.google.com/store/apps/details?id=" + appPackageName);
-    // const url = "https://wa.me/?text=";
-    /*if (await canLaunch("https://play.google.com/store/apps/details?id=" + "Your Refer Code"+inviteCode)) {
-      await launch("https://play.google.com/store/apps/details?id=" + "Your Refer Code"+inviteCode);
-    } else {
-      throw 'Could not launch "https://play.google.com/store/apps/details?id=" + appPackageName';
-    }*/
-    try {
-      launch("https://play.google.com/store/apps/details?id=com.spendzz_merchant" + "Your Refer Code"+inviteCode);
-    } on PlatformException catch(e) {
-      launch("https://play.google.com/store/apps/details?id=" + "https://play.google.com/store/apps/details?id=com.spendzz_merchant" + "Your Refer Code"+inviteCode);
-    } finally {
-      launch("https://play.google.com/store/apps/details?id=" + "https://play.google.com/store/apps/details?id=com.spendzz_merchant" + "Your Refer Code"+inviteCode);
-    }
+    String playstorelink =
+        'https://play.google.com/store/apps/details?id=com.spendzz_merchant_business';
+    String text =
+        'Download spendzz app and earn some cashback on refer customer';
+    String url =
+        "https://wa.me/?text=${Uri.parse("$playstorelink\n $text\n\nYour Refer Code $inviteCode")}";
+    launch("$url");
+
+    // url = "https://wa.me/?text=";
+    // if (await canLaunch("https://play.google.com/store/apps/details?id=" + "Your Refer Code"+inviteCode)) {
+    //   await launch("https://play.google.com/store/apps/details?id=" + "Your Refer Code"+inviteCode);
+    // } else {
+    //   throw 'Could not launch "https://play.google.com/store/apps/details?id=" + appPackageName';
+    // }
+    // try {
+    //   launch("https://play.google.com/store/apps/details?id=com.spendzz_customer_merchant" + "Your Refer Code"+inviteCode);
+    // } on PlatformException catch(e) {
+    //   launch("https://play.google.com/store/apps/details?id=" + "https://play.google.com/store/apps/details?id=com.spendzz_customer_merchant" + "Your Refer Code"+inviteCode);
+    // } finally {
+    //   launch("https://play.google.com/store/apps/details?id=" + "https://play.google.com/store/apps/details?id=com.spendzz_customer_merchant" + "Your Refer Code"+inviteCode);
+    // }
   }
+
   void BackScreen() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AccountScreen()));

@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\path_provider_android\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notification_bg_normal_pressed.9.png",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable-hdpi-v4\\notification_bg_normal_pressed.9.png"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\path_provider_android\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notify_panel_notification_icon_bg.png",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable-hdpi-v4\\notify_panel_notification_icon_bg.png"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\path_provider_android\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notification_bg_low_pressed.9.png",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable-hdpi-v4\\notification_bg_low_pressed.9.png"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\path_provider_android\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notification_bg_normal.9.png",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable-hdpi-v4\\notification_bg_normal.9.png"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\path_provider_android\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notification_bg_low_normal.9.png",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable-hdpi-v4\\notification_bg_low_normal.9.png"
+    }
+]

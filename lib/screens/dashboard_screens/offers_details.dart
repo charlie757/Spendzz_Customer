@@ -236,7 +236,7 @@ class _OffersDetailsState extends State<OffersDetails> {
                                       });
                                     },child:  Text (
                                       "Copy",
-                                      style: new TextStyle(
+                                      style:  new TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                         fontStyle: FontStyle.normal,

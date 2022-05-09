@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spendzz/api_module/api_config.dart';
 import 'package:spendzz/resources/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:spendzz/screens/dashboard_screens/dashboard_main_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'SubscribeScreen.dart';
@@ -87,18 +89,15 @@ class _SubscribeScreenDetailsState extends State<SubscribeScreenDetails> {
               int date=diff.inDays+1;
               totalTime=date.toString();
             }
+
           mdlSubData.purchaseDate = dictResult['payment_date'].toString();
+
           mdlSubData.expiryDate = dictResult['plan_expires'].toString();
           mdlSubData.amount = dictResult['amount'].toString();
           mdlSubData.transactionID = dictResult['payment_id'].toString();
           mdlSubData.payment_invoice= dictResult['payment_uuid'].toString();
           invoice=  dictResult['payment_uuid'].toString();
           invoiceFull="https://testalphonic.com/projects/ramkesh/spendzz/payment-invoice/"+invoice;
-          /*var purchaseDate1 = mdlSubData.purchaseDate;
-          var parts = purchaseDate1.split(' ');
-          purchaseDateMain = parts[0].trim();
-          purchaseDate11=purchaseDateMain;*/
-          //mdlSubData.purchaseDate = dictResult['payment_date'].toString();
 
           subData.add(mdlSubData);
         }
@@ -119,6 +118,7 @@ class _SubscribeScreenDetailsState extends State<SubscribeScreenDetails> {
     String subExpiryDate='';
     return WillPopScope(
       onWillPop: () async {
+        backScreen();
         return true;
       },
       child: Scaffold(
@@ -191,7 +191,7 @@ class _SubscribeScreenDetailsState extends State<SubscribeScreenDetails> {
                                     Align(
                                       alignment: FractionalOffset.center,
                                       child: Text(
-                                        'Get Access of Your Wallet',
+                                        'Become our User & Get access To Wallet',
                                         style: TextStyle(
                                           fontFamily: 'Rubik',
                                           fontWeight: FontWeight.w300,
@@ -401,13 +401,13 @@ class _SubscribeScreenDetailsState extends State<SubscribeScreenDetails> {
                                       onTap: ()
                                       {
                                         Navigator.push(context,
-                                            MaterialPageRoute(builder: (context) => SubscribeScreen()));
+                                            MaterialPageRoute(builder: (context) => SubscribeScreen("")));
                                       },child: Container(
                                       padding: EdgeInsets.only(right: 15,top:5),
                                       child:  Align(
                                         alignment: FractionalOffset.topRight,
                                         child: Text(
-                                          'View Plan',
+                                          'Add New Plan',
                                           style: TextStyle(
                                             fontFamily: 'Rubik',
                                             fontWeight: FontWeight.w500,
@@ -455,277 +455,248 @@ class _SubscribeScreenDetailsState extends State<SubscribeScreenDetails> {
                           ),
                         ),
                       ),
-                      Container(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: subData.length,
-                          //  itemCount: 23,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (ctx, index) {var mdlSubData = subData[index];
-                            return Card(
-                              color: klightYelloColor,
-                              elevation: 0,
-                              child: GestureDetector(
-                                onTap: (){
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: subData.length,
+                        //  itemCount: 23,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (ctx, index) {var mdlSubData = subData[index];
+                        return Card(
+                          color: klightYelloColor,
+                          elevation: 0,
+                          child: GestureDetector(
+                            onTap: (){
 
-                                },
-                                child: Container(
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(0.0),
+                              child: Container(
+                                padding: EdgeInsets.only(right: 0),
+                                child: Card(
+                                  color: klightYelloColor,
+                                  elevation: 3,
                                   margin: EdgeInsets.all(0.0),
-
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
                                   child: Container(
-                                    padding: EdgeInsets.only(right: 0),
-                                    child: Card(
-                                      color: klightYelloColor,
-                                      elevation: 3,
-                                      margin: EdgeInsets.all(0.0),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15.0),
-                                      ),
-                                      child: Container(
-                                        margin: EdgeInsets.only(bottom: 35,top: 25),
-                                        child:  Container(
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      child: Row(
-                                                        children: [
-                                                          Container(
-                                                            padding: EdgeInsets.only(
-                                                                left: 10, top: 8, bottom: 10),
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                              MainAxisAlignment.start,
-                                                              crossAxisAlignment:
-                                                              CrossAxisAlignment.start,
-                                                              children: [
-                                                                Text(
-                                                                  'Purchase Date',
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w300,
-                                                                    color: Colors.black,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Text(
-                                                                  'Expiry Date',
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w300,
-                                                                    color: Colors.black,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Text(
-                                                                  'Amount',
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w300,
-                                                                    color: Colors.black,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Text(
-                                                                  'Transaction ID',
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w300,
-                                                                    color: Colors.black,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Text(
-                                                                  'Gst',
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w300,
-                                                                    color: Colors.black,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                GestureDetector(
-                                                                  onTap: ()
-                                                                  {
-                                                                    //webViewScreen();
-                                                                    _launchUrlpdf();
-                                                                  },
-                                                                  child:   Text(
-                                                                    'Invoice',
-                                                                    style: TextStyle(
-                                                                      decoration: TextDecoration.underline,
-                                                                      fontFamily: 'Rubik',
-                                                                      fontWeight: FontWeight.w500,
-                                                                      color: kYellowColor,
-                                                                      fontStyle: FontStyle.normal,
-                                                                      fontSize: 14.0,
-                                                                    ),
-                                                                  ),
-                                                                )
-
-                                                              ],
+                                    margin: EdgeInsets.only(bottom: 5,top: 2),
+                                    child:  Container(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        padding: EdgeInsets.only(
+                                                            left: 10, top: 8, bottom: 10),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              'Purchase Date',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Rubik',
+                                                                fontWeight: FontWeight.w300,
+                                                                color: Colors.black,
+                                                                fontStyle: FontStyle.normal,
+                                                                fontSize: 14.0,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          SizedBox(width: 10,),
-                                                          Container(
-                                                            padding: EdgeInsets.only(
-                                                                left: 10, top: 5, bottom: 10),
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                              MainAxisAlignment.start,
-                                                              crossAxisAlignment:
-                                                              CrossAxisAlignment.start,
-                                                              children: [
-                                                                SizedBox(
-                                                                  height: 1,
-                                                                ),
-                                                                Text(
-                                                                  //purchaseDateMain.toString(),
-                                                                  subPurchaseDate = mdlSubData.purchaseDate.split(' ').first,
-                                                                 /* mdlSubData.purchaseDate,*/
-                                                                  //purchaseDate11.toString(),
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w500,
-                                                                    color: Colors.black,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Text(
-                                                                  subPurchaseDate = mdlSubData.expiryDate.split(' ').first,
-                                                                  //mdlSubData.expiryDate,
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w500,
-                                                                    color: Colors.black,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Container(
-                                                                    width: 205,
-                                                                    child: Text(
-                                                                      '\u{20B9}'+mdlSubData.amount,
-                                                                      maxLines: 2,
-                                                                      overflow:
-                                                                      TextOverflow.ellipsis,
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Rubik',
-                                                                        fontWeight:
-                                                                        FontWeight.w500,
-                                                                        color: Colors.black,
-                                                                        fontStyle:
-                                                                        FontStyle.normal,
-                                                                        fontSize: 14.0,
-                                                                      ),
-                                                                    )),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Container(
-                                                                  width: MediaQuery.of(context).size.width/2,
-                                                                  child: Text(
-                                                                    mdlSubData.transactionID,
-                                                                    maxLines: 1,
-                                                                    style: TextStyle(
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                      fontFamily: 'Rubik',
-                                                                      fontWeight: FontWeight.w500,
-                                                                      color: Colors.black,
-                                                                      fontStyle: FontStyle.normal,
-                                                                      fontSize: 14.0,
-                                                                    ),
-
-                                                                  ),
-                                                                ),
-
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Text(
-                                                                  '\u{20B9}'+gst1,
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w500,
-                                                                    color: Colors.black,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Text(
-                                                                  '',
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Rubik',
-                                                                    fontWeight: FontWeight.w300,
-                                                                    color: Colors.black54,
-                                                                    fontStyle: FontStyle.normal,
-                                                                    fontSize: 14.0,
-                                                                  ),
-
-                                                                ),
-                                                              ],
+                                                            SizedBox(
+                                                              height: 10,
                                                             ),
-                                                          ),
+                                                            Text(
+                                                              'Expiry Date',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Rubik',
+                                                                fontWeight: FontWeight.w300,
+                                                                color: Colors.black,
+                                                                fontStyle: FontStyle.normal,
+                                                                fontSize: 14.0,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              'Amount',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Rubik',
+                                                                fontWeight: FontWeight.w300,
+                                                                color: Colors.black,
+                                                                fontStyle: FontStyle.normal,
+                                                                fontSize: 14.0,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              'Transaction ID',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Rubik',
+                                                                fontWeight: FontWeight.w300,
+                                                                color: Colors.black,
+                                                                fontStyle: FontStyle.normal,
+                                                                fontSize: 14.0,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: ()
+                                                              {
+                                                                //webViewScreen();
+                                                                _launchUrlpdf();
+                                                              },
+                                                              child:   Text(
+                                                                'Invoice',
+                                                                style: TextStyle(
+                                                                  decoration: TextDecoration.underline,
+                                                                  fontFamily: 'Rubik',
+                                                                  fontWeight: FontWeight.w500,
+                                                                  color: kYellowColor,
+                                                                  fontStyle: FontStyle.normal,
+                                                                  fontSize: 14.0,
+                                                                ),
+                                                              ),
+                                                            )
 
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
+                                                      SizedBox(width: 10,),
+                                                      Container(
+                                                        padding: EdgeInsets.only(
+                                                            left: 10, top: 5, bottom: 10),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: 1,
+                                                            ),
+                                                            Text(
+                                                              //purchaseDateMain.toString(),
+                                                              subPurchaseDate = mdlSubData.purchaseDate.split(' ').first,
+                                                              /* mdlSubData.purchaseDate,*/
+                                                              //purchaseDate11.toString(),
+                                                              style: TextStyle(
+                                                                fontFamily: 'Rubik',
+                                                                fontWeight: FontWeight.w500,
+                                                                color: Colors.black,
+                                                                fontStyle: FontStyle.normal,
+                                                                fontSize: 14.0,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              subPurchaseDate = mdlSubData.expiryDate.split(' ').first,
+                                                              //mdlSubData.expiryDate,
+                                                              style: TextStyle(
+                                                                fontFamily: 'Rubik',
+                                                                fontWeight: FontWeight.w500,
+                                                                color: Colors.black,
+                                                                fontStyle: FontStyle.normal,
+                                                                fontSize: 14.0,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Container(
+                                                                width: 205,
+                                                                child: Text(
+                                                                  '\u{20B9}'+mdlSubData.amount,
+                                                                  maxLines: 2,
+                                                                  overflow:
+                                                                  TextOverflow.ellipsis,
+                                                                  style: TextStyle(
+                                                                    fontFamily: 'Rubik',
+                                                                    fontWeight:
+                                                                    FontWeight.w500,
+                                                                    color: Colors.black,
+                                                                    fontStyle:
+                                                                    FontStyle.normal,
+                                                                    fontSize: 14.0,
+                                                                  ),
+                                                                )),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Container(
+                                                              width: MediaQuery.of(context).size.width/2,
+                                                              child: Text(
+                                                                mdlSubData.transactionID,
+                                                                maxLines: 1,
+                                                                style: TextStyle(
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  fontFamily: 'Rubik',
+                                                                  fontWeight: FontWeight.w500,
+                                                                  color: Colors.black,
+                                                                  fontStyle: FontStyle.normal,
+                                                                  fontSize: 14.0,
+                                                                ),
 
+                                                              ),
+                                                            ),
 
-                                                  ],
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              '',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Rubik',
+                                                                fontWeight: FontWeight.w500,
+                                                                color: Colors.black,
+                                                                fontStyle: FontStyle.normal,
+                                                                fontSize: 14.0,
+                                                              ),
+
+                                                            ),
+
+                                                          ],
+                                                        ),
+                                                      ),
+
+                                                    ],
+                                                  ),
                                                 ),
-                                              )
 
-                                            ],
 
-                                          ),
+                                              ],
+                                            ),
+                                          )
 
-                                        ),
+                                        ],
+
                                       ),
+
                                     ),
                                   ),
                                 ),
                               ),
+                            ),
+                          ),
 
-                            );
-                          },
+                        );
+                        },
 
-                        ),
-                      ),
+                      )
                     ],
                   ),
                 )
@@ -745,10 +716,23 @@ class _SubscribeScreenDetailsState extends State<SubscribeScreenDetails> {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => Invoice(invoiceFull)));
   }
+  void backScreen() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => DashboardMainScreen()));
+  }
 
   _launchUrlpdf() async {
     if (await canLaunch(invoiceFull)) {
-      await launch(invoiceFull,/*forceSafariVC: true, forceWebView: true*/);
+      await launch(invoiceFull,);
+      Fluttertoast.showToast(
+          msg: "Download Successful ",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     } else {
       throw 'Could not launch';
     }

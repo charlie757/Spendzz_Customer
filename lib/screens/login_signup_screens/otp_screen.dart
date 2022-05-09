@@ -1,14 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spendzz/api_module/api_config.dart';
+import 'package:spendzz/resources/ConnectivityProvider.dart';
 import 'package:spendzz/screens/dashboard_screens/dashboard_main_screen.dart';
 import 'package:spendzz/screens/login_signup_screens/login_signup_screen.dart';
 import 'package:spendzz/resources/constants.dart';
@@ -25,60 +29,76 @@ class OtpScreen extends StatefulWidget {
   late ProgressDialog pr;
   TextEditingController otpController = TextEditingController();
   @override
-  _OtpScreenState createState() => _OtpScreenState(phoneValue,otp);
-
-
+  _OtpScreenState createState() => _OtpScreenState(phoneValue, otp);
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  _OtpScreenState(this.phoneValue,this.otp,);
+  _OtpScreenState(
+    this.phoneValue,
+    this.otp,
+  );
   var phoneValue = '';
   var otp = '';
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   TextEditingController otpController = TextEditingController();
-  late Timer _timer;
-  int _start = 9;
   bool styleOBJ = true;
-  bool time= false;
+  bool time = false;
 
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  var device_id = "";
+  var device_type = "";
 
-  changeStyle(){
+// resend otp
+  bool resend = false;
+  int counter = 60;
+  late Timer _timer;
 
+  changeStyle() {
     setState(() {
-      styleOBJ = false ;
+      styleOBJ = false;
     });
   }
+
   var status = true;
 
   @override
   void initState() {
     super.initState();
-    /*Fluttertoast.showToast(
-        msg: "Your Otp Is "+otp,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );*/
+
+    messaging = FirebaseMessaging.instance;
+    messaging.getToken().then((value) {
+      print(value);
+      device_id = value.toString();
+      device_id = value.toString();
+    });
+    if (Platform.isAndroid) {
+      device_type = "Android";
+      // Android-specific code
+    } else if (Platform.isIOS) {
+      // iOS-specific code
+      device_type = "IOS";
+    }
   }
+
   late ProgressDialog pr;
   @override
   Widget build(BuildContext context) {
-
+    final isOnline = Provider.of<ConnectivityProvider>(context).isOnline;
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: kstatusBarColor,
     ));
-    pr = new ProgressDialog(context, type: ProgressDialogType.normal,);
+    pr = new ProgressDialog(
+      context,
+      type: ProgressDialogType.normal,
+    );
     pr.style(
-      child:  SizedBox(
+      child: SizedBox(
         height: 100,
         width: 100,
         child: Center(
           child: CircularProgressIndicator(),
         ),
       ),
-
       elevation: 10.0,
       insetAnimCurve: Curves.ease,
       progress: 0.0,
@@ -86,7 +106,6 @@ class _OtpScreenState extends State<OtpScreen> {
     FocusNode myFocusNode = new FocusNode();
     return WillPopScope(
         onWillPop: () async => true,
-
         child: Scaffold(
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
@@ -104,7 +123,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         BackScreen();
                       },
                       child: Container(
@@ -140,10 +159,10 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                     Center(
                         child: Image.asset(
-                          "assets/images/splash_logo.png",
-                          fit: BoxFit.fitWidth,
-                          width: MediaQuery.of(context).size.width - 100,
-                        )),
+                      "assets/images/splash_logo.png",
+                      fit: BoxFit.fitWidth,
+                      width: MediaQuery.of(context).size.width - 100,
+                    )),
                     SizedBox(
                       height: 15,
                     ),
@@ -193,7 +212,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 25,right: 25),
+                      padding: EdgeInsets.only(left: 25, right: 25),
                       child: Align(
                         alignment: FractionalOffset.topLeft,
                         child: Text(
@@ -209,11 +228,11 @@ class _OtpScreenState extends State<OtpScreen> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 25,right: 25),
-
+                      padding: EdgeInsets.only(left: 25, right: 25),
                       child: TextFormField(
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(6),
+                          FilteringTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
                         style: TextStyle(
@@ -226,69 +245,49 @@ class _OtpScreenState extends State<OtpScreen> {
                         controller: otpController,
                         autocorrect: true,
                         decoration: InputDecoration(
-                          hintText: 'Please enter OTP',
-
-                        ),
-
+                            hintText: 'Please enter OTP',
+                            suffixIcon: InkWell(
+                                onTap: () async {
+                                  !isOnline
+                                      ? ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              backgroundColor: kYellowColor,
+                                              content: Text(
+                                                "Please check internet connection",
+                                                style: TextStyle(fontSize: 16),
+                                              )))
+                                      : resendOtp();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: Text(
+                                    'Resend OTP',
+                                    style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontWeight: FontWeight.w500,
+                                        fontStyle: FontStyle.normal,
+                                        // decoration: TextDecoration.underline,
+                                        color: resend
+                                            ? Colors.black12
+                                            : kYellowColor,
+                                        fontSize: 16.0),
+                                  ),
+                                ))),
                         validator: (String? value) {
                           if (value!.isEmpty) {
                             return 'Please enter OTP';
                           }
                         },
-
                       ),
                     ),
-                    SizedBox(height: 10,),
                     Container(
-                      padding: EdgeInsets.only(right: 20),
+                      padding: EdgeInsets.only(right: 25),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Container(
-                            child: Align(
-                              alignment: FractionalOffset.center,
-                              child: Text(
-                                'Did not receive OTP?' ,
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  fontWeight: FontWeight.w300,
-                                  fontStyle: FontStyle.normal,
-                                  color: blackTextColor,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 5,),
-
-                          GestureDetector(
-                            onTap: ()
-                            {
-
-                              _callResendOtp();
-                            },
-                            child:Container(
-                              child: Align(
-                                alignment: FractionalOffset.bottomRight,
-                                child: Visibility(
-                                    child: Text(
-                                      'ResendOtp',
-                                      style: styleOBJ
-                                          ? TextStyle(fontFamily: 'Rubik',
-                                          fontWeight: FontWeight.w400,
-                                          fontStyle: FontStyle.normal,
-                                          decoration: TextDecoration.underline,
-                                          color: kYellowColor,
-                                          fontSize: 16.0)
-                                          : TextStyle(fontFamily: 'Rubik',
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle: FontStyle.normal,
-                                          decoration: TextDecoration.underline,
-                                          color: blackTextColor,
-                                          fontSize: 16.0),)
-                                ),
-                              ),
-                            ),
+                          Text(
+                            resend ? "00:${counter.toString()}" : '',
+                            style: TextStyle(color: kYellowColor, fontSize: 18),
                           ),
                         ],
                       ),
@@ -306,26 +305,26 @@ class _OtpScreenState extends State<OtpScreen> {
                             color: kYellowColor,
                             // borderRadius: BorderRadius.horizontal()),
                             borderRadius: BorderRadius.circular(20.0)),
-                      /*  child: RaisedButton(
-                          onPressed: status?(){
-
-                          }: null,
-                          child: Text('Continue',
-                          style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 16.0,
-                          ),),),*/
                         child: FlatButton(
-                          onPressed: status?(){
-                            if (_formkey.currentState!.validate()) {
-                              //nextScreen();
-                              _callVerifyOtp();
-                              return;
-                            }
-                          }: null,
+                          onPressed: status
+                              ? () {
+                                  if (_formkey.currentState!.validate()) {
+                                    //nextScreen();
+                                    !isOnline
+                                        ? ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                backgroundColor: kYellowColor,
+                                                content: Text(
+                                                  "Please check internet connection",
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                )))
+                                        : _callVerifyOtp();
+
+                                    return;
+                                  }
+                                }
+                              : null,
                           child: Text(
                             'Continue',
                             style: TextStyle(
@@ -337,29 +336,30 @@ class _OtpScreenState extends State<OtpScreen> {
                             ),
                           ),
                         ),
-
                       ),
                     ),
                   ],
                 ),
-
               ),
             ),
           ),
         ));
   }
+
   _callVerifyOtp() async {
     var mapBody = new Map<String, dynamic>();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var verifyToken = prefs.getString('VERIFY_TOKEN') ?? '';
     mapBody['verify_token'] = verifyToken;
     mapBody['otp'] = otpController.text;
-
+    mapBody['device_id'] = device_id;
+    mapBody['device_type'] = device_type;
     var client = http.Client();
     EasyLoading.show(status: 'loading...');
-
     try {
-      var uriResponse = await client.post(Uri.parse(ApiConfig.app_base_url + ApiConfig.VERIFY_OTP), body: mapBody);
+      var uriResponse = await client.post(
+          Uri.parse(ApiConfig.app_base_url + ApiConfig.VERIFY_OTP),
+          body: mapBody);
       var dataAll = json.decode(uriResponse.body);
       EasyLoading.dismiss();
       if (uriResponse.statusCode == 200) {
@@ -370,25 +370,20 @@ class _OtpScreenState extends State<OtpScreen> {
             backgroundColor: Colors.green,
             timeInSecForIosWeb: 1,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('REGISTER_TOKEN', dataAll['register token'].toString());
-        var accountStatus=dataAll['account_status'].toString();
-        if(dataAll['account_status'].toString() == '1')
-        {
+        var accountStatus = dataAll['account_status'].toString();
+        if (dataAll['account_status'].toString() == '1') {
           prefs.setString('AUTH_TOKEN', dataAll['auth_token'].toString());
           prefs.setBool('IS_LOGIN_DATA_STATUS', true);
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => DashboardMainScreen()));
-        }
-        else
-        {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DashboardMainScreen()));
+        } else {
           nextScreen();
         }
-      }
-      else{
+      } else {
         Fluttertoast.showToast(
             msg: dataAll['message'],
             toastLength: Toast.LENGTH_SHORT,
@@ -396,39 +391,42 @@ class _OtpScreenState extends State<OtpScreen> {
             backgroundColor: Colors.green,
             timeInSecForIosWeb: 1,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
-
+            fontSize: 16.0);
       }
     } finally {
       client.close();
     }
   }
+
   _callResendOtp() async {
     EasyLoading.show(status: 'Resending Otp...');
     var mapBody = new Map<String, dynamic>();
     mapBody['mobile'] = phoneValue;
     var client = http.Client();
-     EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading...');
     try {
-      var uriResponse = await client.post(Uri.parse(ApiConfig.app_base_url + ApiConfig.SIGNUP_WITH_MOBILE), body: mapBody);
+      var uriResponse = await client.post(
+          Uri.parse(ApiConfig.app_base_url + ApiConfig.SIGNUP_WITH_MOBILE),
+          body: mapBody);
       var dataAll = json.decode(uriResponse.body);
       if (uriResponse.statusCode == 200) {
         EasyLoading.dismiss();
         otpController.clear();
-        Fluttertoast.showToast(
-            msg: "Your Otp Is "+dataAll['message'].toString(),
+        /*Fluttertoast.showToast(
+            msg: dataAll['message'],
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             backgroundColor: Colors.green,
             timeInSecForIosWeb: 1,
             textColor: Colors.white,
             fontSize: 16.0
-        );
+        );*/
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(dataAll['message']),
+        ));
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('VERIFY_TOKEN', dataAll['verify_token'].toString());
-      }
-      else{
+      } else {
         EasyLoading.dismiss();
         Fluttertoast.showToast(
             msg: dataAll['message'],
@@ -437,25 +435,47 @@ class _OtpScreenState extends State<OtpScreen> {
             backgroundColor: Colors.green,
             timeInSecForIosWeb: 1,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
-
+            fontSize: 16.0);
       }
     } finally {
       client.close();
     }
   }
+
   void nextScreen() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MoreDetailsScreen()));
   }
+
   void BackScreen() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => SignUp_SignIn()));
   }
-  void onBack()
-  {
 
+  void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (counter > 0) {
+        if (mounted) {
+          setState(() {
+            counter--;
+            resend = true;
+          });
+        }
+      } else {
+        _timer.cancel();
+        if (mounted) {
+          setState(() {
+            resend = false;
+            counter = 60;
+          });
+        }
+      }
+    });
   }
 
+  void resendOtp() {
+    resend ? null : startTimer();
+    resend ? null : _callResendOtp();
+    resend ? print("AlreadyPressed") : print('press');
+  }
 }

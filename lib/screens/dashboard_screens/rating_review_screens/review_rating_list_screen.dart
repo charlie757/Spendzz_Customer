@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spendzz/api_module/api_config.dart';
 import 'package:spendzz/screens/login_signup_screens/signup_details_screen.dart';
@@ -62,19 +63,39 @@ class _ReviewAndRatingState extends State<ReviewAndRating> {
       setState(() {
         allReviewDataList.clear();
       });
-      if (uriResponse.statusCode == 200) {
-        var arrResults = dataAll['data'];
-        isDataFetched = true;
-        for (var i = 0; i < arrResults.length; i++) {
-          var dictResult = arrResults[i];
-          var mdlSubData = AllReviewDataList();
-          mdlSubData.review = dictResult['review'].toString();
-          double.parse(mdlSubData.rating = dictResult['rating'].toString());
-          mdlSubData.get_user_d_t_l = dictResult['get_user_d_t_l']['name'].toString();
-          allReviewDataList.add(mdlSubData);
-        }
 
-        setState(() {});
+      if (uriResponse.statusCode == 200) {
+        EasyLoading.dismiss();
+        var status=dataAll['status'];
+        if(status==true)
+          {
+            var arrResults = dataAll['data'];
+            isDataFetched = true;
+            for (var i = 0; i < arrResults.length; i++) {
+              var dictResult = arrResults[i];
+              var mdlSubData = AllReviewDataList();
+              mdlSubData.review = dictResult['review'].toString();
+              double.parse(mdlSubData.rating = dictResult['rating'].toString());
+              mdlSubData.get_user_d_t_l = dictResult['get_user_d_t_l']['name'].toString();
+              allReviewDataList.add(mdlSubData);
+            }
+
+            setState(() {});
+          }
+        else
+          {
+            EasyLoading.dismiss();
+            Fluttertoast.showToast(
+                msg: dataAll['message'],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.red,
+                timeInSecForIosWeb: 1,
+                textColor: Colors.white,
+                fontSize: 16.0);
+
+          }
+
       }
 
     } finally {
@@ -119,110 +140,290 @@ class _ReviewAndRatingState extends State<ReviewAndRating> {
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Container(
-            height: MediaQuery.of(context).size.height - 200,
-            child: Container(
-              child: Column(
+          child: Wrap(
+            children: [
+              Wrap(
                 children: [
-                  ListView.builder(
-                    //shrinkWrap: true,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: allReviewDataList.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (ctx, index) {
-                      var mdlSubData = allReviewDataList[index];
-                      return Card(
-                        color: klightYelloColor,
-                        elevation: 0,
-                        child:  GestureDetector(
-                          onTap: () {
-                           // nextScreen();
-                          },
-                          child: Container(
-                            margin: EdgeInsets.all(2.0),
-                            decoration: BoxDecoration(
-                              color: Color(0xffFFFCF6),
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(30.0),
-                                bottomLeft: Radius.circular(30.0),
-                                bottomRight: Radius.circular(30.0),
-                                topLeft: Radius.circular(30.0),
-                              ),
-                            ),
+                  Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        allReviewDataList.length == 0
+                            ? Center(
                             child: Container(
-                              padding: EdgeInsets.only(left: 5),
-                              child: Row(
-                                children: [
-                                  Expanded(
-
-                                    child:  Container(
-                                      padding: EdgeInsets.only(left: 15,right: 15),
-                                    width: 48.00,
-                                    height: 48.00,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      color: Colors.red,
-                                      image: DecorationImage(
-                                        scale: 2,
-                                        image: ExactAssetImage(
-                                            'assets/images/makepayment.png'),
-                                        fit: BoxFit.scaleDown,
+                                child: Column(children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              0, 150, 0, 0),
+                                          alignment: Alignment.center,
+                                          height: 200,
+                                          child: Image.asset(
+                                            'assets/images/nodata_new.png',
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
+                                            fit: BoxFit.fill,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                          )),
+                                      SizedBox(
+                                        height: 25,
                                       ),
-                                    ),
-                                  ),),
-                                  SizedBox(width: 10,),
-                                  Expanded(
-                                    flex:2,
-                                    child: Container(
-                                    padding: EdgeInsets.only(
-                                      top: 15,
-                                      right: 15,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              mdlSubData.get_user_d_t_l,
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black,
-                                                letterSpacing: 2,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 16.0,
-                                              ),
-                                            )),
-                                        SizedBox(
-                                          height: 5,
+                                      Text(
+                                        "You don't have any Rating and Review",
+                                        style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.black,
+                                          fontStyle: FontStyle.normal,
+                                          fontSize: 16.0,
                                         ),
-                                        Container(
-                                            width: 120,
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
+                                      )
+                                    ],
+                                  ),
+                                ])))
+                            : ListView.builder(
+                          //shrinkWrap: true,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: allReviewDataList.length,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (ctx, index) {
+                            var mdlSubData = allReviewDataList[index];
+                            return Card(
+                              color: klightYelloColor,
+                              elevation: 0,
+                              child:  GestureDetector(
+                                onTap: () {
+                                  // nextScreen();
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(2.0),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffFFFCF6),
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(30.0),
+                                      bottomLeft: Radius.circular(30.0),
+                                      bottomRight: Radius.circular(30.0),
+                                      topLeft: Radius.circular(30.0),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 5),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
 
-                                              mdlSubData.review,
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
+                                          child:  Container(
+                                            padding: EdgeInsets.only(left: 15,right: 15),
+                                            width: 48.00,
+                                            height: 48.00,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(20.0),
+                                              color: Colors.red,
+                                              image: DecorationImage(
+                                                scale: 2,
+                                                image: ExactAssetImage(
+                                                    'assets/images/makepayment.png'),
+                                                fit: BoxFit.scaleDown,
+                                              ),
+                                            ),
+                                          ),),
+                                        SizedBox(width: 10,),
+                                        Expanded(
+                                          flex:3,
+                                          child: Container(
+                                            padding: EdgeInsets.only(
+                                              top: 15,
+                                              right: 15,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                    alignment: Alignment.topLeft,
+                                                    child: Text(
+                                                      mdlSubData.get_user_d_t_l,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Rubik',
+                                                        fontWeight: FontWeight.w500,
+                                                        color: Colors.black,
+                                                        letterSpacing: 2,
+                                                        fontStyle: FontStyle.normal,
+                                                        fontSize: 16.0,
+                                                      ),
+                                                    )),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Container(
+                                                    width: 120,
+                                                    alignment: Alignment.topLeft,
+                                                    child: Text(
+
+                                                      mdlSubData.review,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Rubik',
+                                                        fontWeight: FontWeight.w300,
+                                                        color: Colors.black,
+                                                        fontStyle: FontStyle.normal,
+                                                        fontSize: 14.0,
+                                                      ),
+                                                    ))
+                                              ],
+                                            ),
+                                          ),),
+                                        Expanded(
+                                            flex:3,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                // nextScreen();
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(right: 5),
+                                                child: Container(
+                                                    child: RatingBar.builder(
+                                                      initialRating: double.parse(mdlSubData.rating),
+                                                      minRating: 1,
+                                                      direction: Axis.horizontal,
+                                                      allowHalfRating: true,
+                                                      itemCount: 5,
+                                                      itemSize: 20,
+                                                      itemPadding:
+                                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                                      itemBuilder: (context, _) => Icon(
+                                                        Icons.star,
+                                                        color: kYellowColor,
+                                                      ),
+                                                      onRatingUpdate: (rating) {
+                                                        print(rating);
+                                                      },
+                                                    )),
                                               ),
                                             ))
+
                                       ],
                                     ),
-                                  ),),
-                                  Expanded(
-                                      flex:2,
-                                      child: GestureDetector(
+                                  ),
+                                ),
+                              ),
+
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+             /* ListView.builder(
+                //shrinkWrap: true,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: allReviewDataList.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (ctx, index) {
+                  var mdlSubData = allReviewDataList[index];
+                  return Card(
+                    color: klightYelloColor,
+                    elevation: 0,
+                    child:  GestureDetector(
+                      onTap: () {
+                        // nextScreen();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(2.0),
+                        decoration: BoxDecoration(
+                          color: Color(0xffFFFCF6),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(30.0),
+                            bottomLeft: Radius.circular(30.0),
+                            bottomRight: Radius.circular(30.0),
+                            topLeft: Radius.circular(30.0),
+                          ),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Row(
+                            children: [
+                              Expanded(
+
+                                child:  Container(
+                                  padding: EdgeInsets.only(left: 15,right: 15),
+                                  width: 48.00,
+                                  height: 48.00,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: Colors.red,
+                                    image: DecorationImage(
+                                      scale: 2,
+                                      image: ExactAssetImage(
+                                          'assets/images/makepayment.png'),
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ),
+                                ),),
+                              SizedBox(width: 10,),
+                              Expanded(
+                                flex:3,
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                    top: 15,
+                                    right: 15,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Container(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            mdlSubData.get_user_d_t_l,
+                                            style: TextStyle(
+                                              fontFamily: 'Rubik',
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                              letterSpacing: 2,
+                                              fontStyle: FontStyle.normal,
+                                              fontSize: 16.0,
+                                            ),
+                                          )),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Container(
+                                          width: 120,
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+
+                                            mdlSubData.review,
+                                            style: TextStyle(
+                                              fontFamily: 'Rubik',
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.black,
+                                              fontStyle: FontStyle.normal,
+                                              fontSize: 14.0,
+                                            ),
+                                          ))
+                                    ],
+                                  ),
+                                ),),
+                              Expanded(
+                                  flex:3,
+                                  child: GestureDetector(
                                     onTap: () {
-                                     // nextScreen();
+                                      // nextScreen();
                                     },
                                     child: Container(
                                       padding: EdgeInsets.only(right: 5),
@@ -247,61 +448,19 @@ class _ReviewAndRatingState extends State<ReviewAndRating> {
                                     ),
                                   ))
 
-                                ],
-                              ),
-                            ),
+                            ],
                           ),
                         ),
+                      ),
+                    ),
 
-                      );
-                    },
-                  ),
-
-
-                ],
-              ),
-            ),
+                  );
+                },
+              ),*/
+            ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Stack(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width - 50,
-              padding: const EdgeInsets.only(
-                  left: 50.0, right: 50.0, bottom: 20),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 0.0, right: 0.0, bottom: 0),
-                child: Container(
-                  height: 50,
-                  child: ElevatedButton(
-                    child: Text(
-                      'Add Review',
-                      style: TextStyle(
-                        fontFamily: 'Rubik',
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    onPressed: () {
-                      nextScreen();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: kYellowColor,
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
 
-          ],
-        ),
       ),
     );
   }
@@ -311,7 +470,6 @@ class _ReviewAndRatingState extends State<ReviewAndRating> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AddReview(unique_key)));
   }
-
   void previousScreen() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => CategoryDetails('','','')));

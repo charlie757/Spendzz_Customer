@@ -1,23 +1,3 @@
-// import 'dart:convert';
-// import 'dart:io';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:flutter/widgets.dart';
-// import 'package:flutter_easyloading/flutter_easyloading.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:geocoding/geocoding.dart';
-// import 'package:geolocator/geolocator.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:mime/mime.dart';
-// import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:spendzz/api_module/api_config.dart';
-// import 'package:spendzz/dashboard/account_screen.dart';
-// import 'package:spendzz/dashboard/dashboard_main_screen.dart';
-// import 'package:spendzz/intro_screen/languages.dart';
-// import 'package:spendzz/resources/constants.dart';
-// import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -50,14 +30,11 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  late String phoneNumber='';
+  late String phoneNumber = '';
   late ProgressDialog pr;
   String location = 'Null, Press Button';
   late String Address;
   final Geolocator geolocator = Geolocator();
-
-
-
 
   TextEditingController fullNameController = new TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -69,14 +46,11 @@ class _ProfileState extends State<Profile> {
   bool is_login_status = false;
   var imgValueUser = '';
 
-
   @override
   void initState() {
     super.initState();
     _checkToken();
-
   }
-
 
   Future getImageFromGallery() async {
     var pickedFile;
@@ -95,8 +69,9 @@ class _ProfileState extends State<Profile> {
     setState(() {
       _image = pickedFile;
     });
-   // _uploadImageToServerProfileImagevalue();
+    // _uploadImageToServerProfileImagevalue();
   }
+
   Future getImageFromCamera() async {
     var pickedFile;
     var pickedFiletemp = await picker.getImage(source: ImageSource.camera);
@@ -114,50 +89,51 @@ class _ProfileState extends State<Profile> {
     setState(() {
       _image = pickedFile;
     });
-   // _uploadImageToServerProfileImagevalue();
+    // _uploadImageToServerProfileImagevalue();
   }
+
   _actionSheet(context) {
     return showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) => CupertinoActionSheet(
-          title: Text('Choose Image'),
-          cancelButton: CupertinoActionSheetAction(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          actions: <Widget>[
-            CupertinoActionSheetAction(
-              child: Text('Choose From Gallery'),
-              onPressed: () {
-                getImageFromGallery();
-                Navigator.of(context).pop();
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: Text('Pick From Camera'),
-              onPressed: () {
-                getImageFromCamera();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        )
-    );
+              title: Text('Choose Image'),
+              cancelButton: CupertinoActionSheetAction(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              actions: <Widget>[
+                CupertinoActionSheetAction(
+                  child: Text('Choose From Gallery'),
+                  onPressed: () {
+                    getImageFromGallery();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                CupertinoActionSheetAction(
+                  child: Text('Pick From Camera'),
+                  onPressed: () {
+                    getImageFromCamera();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
   }
+
   _checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('AUTH_TOKEN') != null) {
       is_login_status = true;
       _callGetProfile(prefs.getString('AUTH_TOKEN').toString());
     }
-    setState(() {
-    });
+    setState(() {});
   }
+
   _callGetProfile(String tokenData) async {
     var client = http.Client();
-     EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading...');
     try {
       var uriResponse = await client.get(
           Uri.parse(ApiConfig.app_base_url + ApiConfig.GET_PROFILE),
@@ -174,14 +150,16 @@ class _ProfileState extends State<Profile> {
         phoneNumber = dataAll['data']['mobile'].toString();
         dobController.text = dataAll['data']['dob'].toString();
         addressController.text = dataAll['data']['address'].toString();
-        imgValueUser=dataAll['file_path'].toString()+ "/" +dataAll['data']['profile'].toString();
-        setState(() {
-        });
+        imgValueUser = dataAll['file_path'].toString() +
+            "/" +
+            dataAll['data']['profile'].toString();
+        setState(() {});
       }
     } finally {
       client.close();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -238,11 +216,11 @@ class _ProfileState extends State<Profile> {
 
     Future<void> GetAddressFromLatLong(Position position) async {
       List<Placemark> placemarks =
-      await placemarkFromCoordinates(position.latitude, position.longitude);
+          await placemarkFromCoordinates(position.latitude, position.longitude);
       print(placemarks);
       Placemark place = placemarks[0];
       Address =
-      '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+          '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
       setState(() {
         addressController.text = Address.toString();
       });
@@ -292,59 +270,60 @@ class _ProfileState extends State<Profile> {
                   Container(
                     height: 100,
                     width: 100,
-                    padding: EdgeInsets.only( top: 10,),
+                    padding: EdgeInsets.only(
+                      top: 10,
+                    ),
                     child: Stack(
                       children: [
                         Container(
-                          padding: EdgeInsets.only(left: 0,top: 0),
+                          padding: EdgeInsets.only(left: 0, top: 0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
                             child: CachedNetworkImage(
                                 height: 80,
                                 width: 80,
                                 imageUrl: imgValueUser.toString(),
                                 placeholder: (context, url) => Transform.scale(
-                                  scale: 0.4,
-                                  child: CircularProgressIndicator(
-                                    color: kYellowColor,
-                                    strokeWidth: 3,
-                                  ),
-                                ),
+                                      scale: 0.4,
+                                      child: CircularProgressIndicator(
+                                        color: kYellowColor,
+                                        strokeWidth: 3,
+                                      ),
+                                    ),
                                 errorWidget: (context, url, error) => Container(
                                     height: 80,
                                     width: 80,
-                                    child: Image.asset('assets/images/account_profile.png')
-                                ),
-                                fit: BoxFit.cover
-                            ),
+                                    child: Image.asset(
+                                        'assets/images/account_profile.png')),
+                                fit: BoxFit.cover),
                           ),
                         ),
                         Container(
-                            width: 80.0, height: 80.0,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                image: DecorationImage(
-                                    image: _image == null ? NetworkImage(imgValueUser.toString()) :
-                                    FileImage(_image!) as ImageProvider, fit: BoxFit.cover
-                                )
-                            ),
-                          ),
-
+                          width: 80.0,
+                          height: 80.0,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              image: DecorationImage(
+                                  image: _image == null
+                                      ? NetworkImage(imgValueUser.toString())
+                                      : FileImage(_image!) as ImageProvider,
+                                  fit: BoxFit.cover)),
+                        ),
                         GestureDetector(
                           onTap: () {
                             _actionSheet(context);
                           },
                           child: Align(
-                            alignment:
-                            FractionalOffset.bottomRight,
+                            alignment: FractionalOffset.bottomRight,
                             child: Container(
-                              padding: EdgeInsets.only(left: 14,top: 23),
+                              padding: EdgeInsets.only(left: 14, top: 23),
                               width: 35.00,
                               height: 35.00,
                               decoration: BoxDecoration(
-                                borderRadius:
-                                BorderRadius.circular(13.0),
+                                borderRadius: BorderRadius.circular(13.0),
                                 color: Colors.red,
                                 image: DecorationImage(
                                   scale: 4,
@@ -356,7 +335,6 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                         )
-
                       ],
                     ),
                   ),
@@ -388,9 +366,9 @@ class _ProfileState extends State<Profile> {
                               fontSize: 16.0,
                             ),
                             decoration: InputDecoration(hintText: 'Enter Name'
-                              // border: InputBorder.none,
+                                // border: InputBorder.none,
 
-                            ))
+                                ))
                       ],
                     ),
                   ),
@@ -416,6 +394,11 @@ class _ProfileState extends State<Profile> {
                   Container(
                     padding: EdgeInsets.only(left: 25, right: 25),
                     child: TextField(
+                        inputFormatters: [
+                          // BlacklistingTextInputFormatter(RegExp(r"\s"))
+
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         key: const Key('email'),
                         controller: emailController,
                         style: TextStyle(
@@ -425,8 +408,7 @@ class _ProfileState extends State<Profile> {
                           fontStyle: FontStyle.normal,
                           fontSize: 16.0,
                         ),
-                        decoration: InputDecoration(hintText: 'Enter Email'
-                        )),
+                        decoration: InputDecoration(hintText: 'Enter Email')),
                   ),
                   Container(
                     padding: EdgeInsets.only(left: 25, right: 25, top: 25),
@@ -617,30 +599,25 @@ class _ProfileState extends State<Profile> {
                                         border: InputBorder.none,
                                         hintText: 'Enter Address'))),
                             Spacer(),
-                            GestureDetector(
-                              onTap: () async {},
-                              child: Container(
-                                padding: EdgeInsets.only(left: 10, top: 0),
-                                child: Align(
-                                  alignment: FractionalOffset.topRight,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.my_location,
-                                    ),
-                                    iconSize: 25,
-                                    color: kYellowColor,
-                                    splashColor: Colors.purple,
-                                    onPressed: () async {
-                                      Position position =
-                                      await _getGeoLocationPosition();
-                                      var address =
-                                      'Lat: ${position.latitude} , Long: ${position.longitude}';
-
-                                      GetAddressFromLatLong(position);
-
-                                      // getLocation();
-                                    },
+                            Container(
+                              padding: EdgeInsets.only(left: 10, top: 0),
+                              child: Align(
+                                alignment: FractionalOffset.topRight,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.my_location,
                                   ),
+                                  iconSize: 25,
+                                  color: kYellowColor,
+                                  splashColor: Colors.purple,
+                                  onPressed: () async {
+                                    Position position =
+                                        await _getGeoLocationPosition();
+                                    var address =
+                                        'Lat: ${position.latitude} , Long: ${position.longitude}';
+
+                                    GetAddressFromLatLong(position);
+                                  },
                                 ),
                               ),
                             )
@@ -707,13 +684,13 @@ class _ProfileState extends State<Profile> {
   }
 
   void previousScreen() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => AccountScreen()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AccountScreen()));
   }
 
   void saveScreen() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => AccountScreen()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AccountScreen()));
   }
 
   _callUpdateProfile() async {
@@ -731,11 +708,11 @@ class _ProfileState extends State<Profile> {
     var request = http.MultipartRequest(
         'POST', Uri.parse(ApiConfig.app_base_url + ApiConfig.PROFILE));
     request.headers.addAll(headers);
-    if(_image!=null)
-      {
-        final file = await http.MultipartFile.fromPath('profile_pic', _image!.path);
-        request.files.add(file);
-      }
+    if (_image != null) {
+      final file =
+          await http.MultipartFile.fromPath('profile_pic', _image!.path);
+      request.files.add(file);
+    }
     request.fields['name'] = fullNameController.text.toString();
     request.fields['email'] = emailController.text.toString();
     request.fields['address'] = addressController.text.toString();
@@ -756,7 +733,6 @@ class _ProfileState extends State<Profile> {
           fontSize: 16.0);
       saveScreen();
       print(allJson);
-
     } else {
       Fluttertoast.showToast(
           msg: allJson['message'].toString(),

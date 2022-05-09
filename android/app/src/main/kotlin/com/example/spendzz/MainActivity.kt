@@ -1,4 +1,4 @@
-package com.example.spendzz
+package com.spendzz_customer
 
 import io.flutter.embedding.android.FlutterActivity
 

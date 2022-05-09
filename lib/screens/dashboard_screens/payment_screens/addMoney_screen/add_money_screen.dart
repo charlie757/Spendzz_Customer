@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:http/http.dart' as http;
@@ -17,8 +18,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spendzz/api_module/api_config.dart';
 import 'package:spendzz/screens/dashboard_screens/dashboard_main_screen.dart';
 import 'package:spendzz/resources/constants.dart';
-import 'package:spendzz/screens/dashboard_screens/payment_screens/sendMoney_screen/qrCode.dart';
+import 'package:spendzz/screens/account_screens/qrCode.dart';
+import 'package:spendzz/screens/dashboard_screens/payment_screens/addMoney_screen/promo_screen.dart';
 
+import '../trancations_details_screens/passbook_screen.dart';
 import 'add_money_history.dart';
 
 class AddMoneyScreen extends StatefulWidget {
@@ -51,26 +54,43 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   late String promoCode;
   late String promo_code_type;
   late String minimum_amount;
-  late String maximum_discount='';
+  late String maximum_discount = '';
   late int flatAndPerValue = 0;
   //late String flatAndPerValue;
   late double total_amount_withPromo = 0;
   late double promoCodeValue = 0;
-  late bool promoStatus=false;
+  late bool promoStatus = false;
   late int promoCodeSend = 0;
+  bool status = false;
+  //todo offers Fields
+  var offer_baseUrl = '';
+  List<ExcitingOffersData> listExcitingOffersData = [];
 
-
-
-
+  var promoCodeApply = '';
+  var ShowPromoCode = "";
+  bool offersStatus = false;
+  var kyc_limit_status = '';
+  Block_UnblockUser _block_unblockUser = Block_UnblockUser();
   @override
   void initState() {
     super.initState();
     initController();
     _callGetProfile();
+    _checkToken();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  _checkToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('AUTH_TOKEN') != null) {
+      _callOffersCategory(prefs.getString('AUTH_TOKEN').toString());
+    }
+    setState(() {
+      bool status = false;
+    });
   }
 
   @override
@@ -78,11 +98,15 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     super.dispose();
     _razorpay.clear();
   }
+
   void openCheckout() async {
     intValue = int.parse(amountController.text);
     var options = {
+      //'key': 'rzp_live_GGUyTkH97ZWQTx',
       'key': 'rzp_test_XzDju6P1EB5RkQ',
       'amount': _razorpayAmount.toString(),
+      /*'amount': double.parse(_razorpayAmount.toStringAsFixed(2)),*/
+
       'name': name,
       'description': 'Payment',
       'prefill': {'contact': mobile, 'email': email},
@@ -94,8 +118,55 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       _razorpay.open(options);
     } catch (e) {
       debugPrint('');
+    }
+  }
 
+  _callOffersCategory(String tokenData) async {
+    var client = http.Client();
+    EasyLoading.show(status: 'loading...');
+    try {
+      var uriResponse = await client.get(
+          Uri.parse(
+              ApiConfig.app_base_url + ApiConfig.PROMO_CODE_LIST_ADD_MONEY),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $tokenData'
+          });
+      var dataAll = json.decode(uriResponse.body);
+      print(dataAll);
+      offer_baseUrl = dataAll['icon_url'].toString();
+      offersStatus = dataAll['status'];
+      EasyLoading.dismiss();
 
+      if (uriResponse.statusCode == 200) {
+        if (offersStatus == true) {
+          var arrResults = dataAll['data'];
+          isDataFetched = true;
+          for (var i = 0; i < arrResults.length; i++) {
+            var dictResult = arrResults[i];
+            var mdlSubData = ExcitingOffersData();
+            mdlSubData.promocode = dictResult['promocode'].toString();
+            mdlSubData.icon = dictResult['icon'].toString();
+            mdlSubData.title = dictResult['title'].toString();
+            mdlSubData.description = dictResult['description'].toString();
+            mdlSubData.promo_code_id = dictResult['promo_code_id'].toString();
+            listExcitingOffersData.add(mdlSubData);
+            setState(() {});
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: dataAll['message'],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+        setState(() {});
+      }
+    } finally {
+      client.close();
     }
   }
 
@@ -111,14 +182,12 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     ));
     return WillPopScope(
         onWillPop: () async {
-          if(Platform.isAndroid)
-          {
-
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>DashboardMainScreen()));
-          }
-          else
-          {
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>DashboardMainScreen()));
+          if (Platform.isAndroid) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => DashboardMainScreen()));
+          } else {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => DashboardMainScreen()));
           }
           //ShowDialog();
           return true;
@@ -147,188 +216,179 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 width: 20,
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>DashboardMainScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DashboardMainScreen()));
               },
             ),
           ),
-          body: SingleChildScrollView(
+          body: SafeArea(
             child: Form(
               key: _formkey,
               child: Container(
                 height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    buildConfettiWidget(controllerTopCenter, pi / 1),
-                    buildConfettiWidget(controllerTopCenter, pi / 4),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width - 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                          color: Colors.black26,
-                        ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      buildConfettiWidget(controllerTopCenter, pi / 1),
+                      buildConfettiWidget(controllerTopCenter, pi / 4),
+                      SizedBox(
+                        height: 25,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 15, right: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text('\u{20B9}',
-                                    style: TextStyle(
-                                      color: kYellowColor, // <-- Change this
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w400,
-                                      fontStyle: FontStyle.normal,
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Container(
-                                  width: 100,
-                                  child: TextFormField(
-                                    cursorColor: kYellowColor,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      LengthLimitingTextInputFormatter(10),
-                                    ],
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      fontWeight: FontWeight.w500,
-                                      color: kYellowColor,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: 22.0,
-                                    ),
-                                    autocorrect: true,
-                                    controller: amountController,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'Enter Amount',
-                                        hintStyle: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black38,
-                                            fontStyle: FontStyle.normal,
-                                            fontSize: 1.0)),
-                                    validator: (String? value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter Amount';
-                                      }
-                                    },
+                      Container(
+                        width: MediaQuery.of(context).size.width - 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(
+                            color: ShowPromoCode == ''
+                                ? Colors.black
+                                : Colors.orange,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text('\u{20B9}',
+                                      style: TextStyle(
+                                        color: kYellowColor, // <-- Change this
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w400,
+                                        fontStyle: FontStyle.normal,
+                                      )),
+                                  SizedBox(
+                                    width: 10,
                                   ),
-                                ),
-                              ],
-                            ),
-
-                            Align(
-                                alignment: Alignment.centerRight,
-                                child: GestureDetector(
-                                    onTap: () {
+                                  Container(
+                                    width: 150,
+                                    child: TextFormField(
+                                      readOnly:
+                                          ShowPromoCode == '' ? false : true,
+                                      cursorColor: kYellowColor,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(10),
+                                      ],
+                                      style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontWeight: FontWeight.w500,
+                                        color: kYellowColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: 22.0,
+                                      ),
+                                      autocorrect: true,
+                                      controller: amountController,
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: 'Enter Amount',
+                                          hintStyle: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black38,
+                                              fontStyle: FontStyle.normal,
+                                              fontSize: 1.0)),
+                                      validator: (String? value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter Amount';
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              if (offersStatus == true) ...[
+                                GestureDetector(
+                                    onTap: () async {
+                                      await ShowPromoCode == ''
+                                          ? _checkToken()
+                                          : null;
                                       if (amountController.text.isEmpty) {
-                                        EasyLoading.showToast('Please enter Amount');
+                                        EasyLoading.showToast(
+                                            'Please enter Amount');
                                         return;
                                       }
-                                      if (int.parse(amountController.text) <= 0) {
+                                      if (int.parse(amountController.text) <=
+                                          0) {
                                         EasyLoading.showToast(
                                             'Please enter Valid Amount');
                                         return;
                                       } else {
-                                        promoCodePopup();
+                                        ShowPromoCode == ''
+                                            ? promoCodePopup()
+                                            : null;
+                                        // FocusManager.instance.primaryFocus?.unfocus();
                                       }
                                     },
                                     child: Container(
-                                      padding: EdgeInsets.only(right: 5),
+                                      padding: EdgeInsets.only(right: 8),
                                       child: Text('Apply Promo',
                                           style: TextStyle(
-                                            color: kYellowColor, // <-- Change this
+                                            color: ShowPromoCode == ''
+                                                ? kYellowColor
+                                                : Colors
+                                                    .orange, // <-- Change this
                                             fontSize: 14,
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w500,
                                             fontStyle: FontStyle.normal,
                                           )),
-                                    )
-                                )
-                            )
-
-                          ],
+                                    ))
+                              ] else if (offersStatus == true)
+                                ...[]
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        if(maximum_discount=='')...[
-
-                        ]
-                        else...[
-                          Container(
-                            child: Text(
-                              'You have earned\n₹'+maximum_discount+' cashback',
-                              style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontWeight: FontWeight.w300,
-                                color: Colors.green,
-                                fontStyle: FontStyle.normal,
-                                fontSize: 16.0,
+                      ShowPromoCode == ''
+                          ? Container()
+                          : Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: new EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 25),
+                              padding: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  border: Border.all(
+                                    color: Colors.black12,
+                                    width: 1,
+                                  )),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    ShowPromoCode.toString(),
+                                    style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.green,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      ShowPromoCode = "";
+                                      promoStatus = false;
+                                      setState(() {
+                                        promoStatus = false;
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.cancel,
+                                      color: Colors.black26,
+                                      size: 22,
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-
-                          )
-                        ],
-
-                      ],
-                    ),
-                    SizedBox(height: 25),
-                    Container(
-                      padding: EdgeInsets.only(left: 25, right: 25, top: 15),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: FractionalOffset.topLeft,
-                            child: Text(
-                              'Add Note',
-                              style: TextStyle(
-                                fontFamily: 'Rubik',
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black38,
-                                fontStyle: FontStyle.normal,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ),
-                          TextFormField(
-                            cursorColor: kYellowColor,
-                            keyboardType: TextInputType.multiline,
-                            minLines: 1,
-                            maxLines: 8,
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 16.0,
-                            ),
-                            autocorrect: true,
-                            controller: addNoteController,
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xff303030)),
-                              ),
-                            ),
-                            validator: (String? value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter Full Name';
-                              }
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                    /*if(total_amount_withPromo>0)...[
                       SizedBox(height: 25),
                       Container(
                         padding: EdgeInsets.only(left: 25, right: 25, top: 15),
@@ -337,86 +397,47 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                             Align(
                               alignment: FractionalOffset.topLeft,
                               child: Text(
-                                'Pay from',
+                                'Add Note',
                                 style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.black,
+                                  color: Colors.black38,
                                   fontStyle: FontStyle.normal,
                                   fontSize: 16.0,
                                 ),
                               ),
                             ),
+                            TextFormField(
+                              cursorColor: kYellowColor,
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              maxLines: 8,
+                              style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 16.0,
+                              ),
+                              autocorrect: true,
+                              controller: addNoteController,
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xff303030)),
+                                ),
+                              ),
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter Full Name';
+                                }
+                              },
+                            )
                           ],
                         ),
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            padding:
-                            EdgeInsets.only(left: 25, right: 25, top: 15),
-                            child: Column(
-                              children: [
-                                Align(
-                                  alignment: FractionalOffset.topLeft,
-                                  child: Text(
-                                    'Spendzz Balance  (Low Balance)',
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.black38,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                              left: 25,
-                              right: 25,
-                            ),
-                            child: Row(
-                              children: [
-                                Align(
-                                  child: Text(
-                                    'Available Balance ₹1000',
-                                    style: TextStyle(
-                                      fontFamily: 'Rubik',
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.black,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                Radio(
-                                    fillColor: MaterialStateColor.resolveWith(
-                                            (states) => kYellowColor),
-                                    value: 1,
-                                    groupValue: _value,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _value = value as int;
-                                      });
-                                    }),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(left: 25, right: 25),
-                            child: Divider(
-                              color: Colors.black38,
-                              thickness: 1.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],*/
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -427,7 +448,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             width: 200,
             child: Padding(
               padding:
-                  const EdgeInsets.only(left: 0, right: 0, top: 25, bottom: 25),
+                  const EdgeInsets.only(left: 0, right: 0, top: 25, bottom: 5),
               child: Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width,
@@ -445,6 +466,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                       return;
                     } else {
                       openCheckout();
+                      // _callCheckKycLimit_AddMoney_Withought_Promo();
+
                     }
                   },
                   child: Text(
@@ -466,27 +489,20 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
   void promoCodePopup() {
     showModalBottomSheet(
-      /*shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-      ),*/
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
       context: context,
       isScrollControlled: true,
       builder: (context) {
         return Container(
-          padding:
-          EdgeInsets.only(left: 25, right: 25, bottom: 25, top: 5),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Wrap(
-              children: [
-                Container(
-                padding: MediaQuery.of(context).viewInsets,
-                 /* padding:
-                      EdgeInsets.only(left: 25, right: 25, bottom: 550, top: 5),*/
+            height: MediaQuery.of(context).size.height - 100,
+            padding: MediaQuery.of(context).viewInsets,
+            margin: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 0),
+            child: StatefulBuilder(
+              builder: (context, state) {
+                return Container(
                   child: Column(
+                    //mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
                         height: 10,
@@ -507,11 +523,12 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                             Spacer(),
                             GestureDetector(
                               onTap: () {
+                                promoCodeController.clear();
                                 Navigator.of(context).pop();
                               },
                               child: Icon(
                                 Icons.cancel,
-                                color: Colors.black38,
+                                color: Colors.black54,
                                 size: 30,
                               ),
                             )
@@ -528,9 +545,10 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                         width: MediaQuery.of(context).size.width - 100,
                       )),
                       SizedBox(
-                        height: 25,
+                        height: 20,
                       ),
                       Container(
+                        padding: EdgeInsets.only(left: 5, right: 5),
                         child: Column(
                           children: [
                             Align(
@@ -547,10 +565,10 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                               ),
                             ),
                             TextField(
-                              keyboardType: TextInputType.text,
-                                textCapitalization: TextCapitalization.characters,
-
-                            style: TextStyle(
+                                keyboardType: TextInputType.text,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                style: TextStyle(
                                   fontFamily: 'Rubik',
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black,
@@ -560,64 +578,154 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                 autocorrect: true,
                                 controller: promoCodeController,
                                 decoration: InputDecoration(
-                                  hintText: 'Enter Promo code',
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xff787D86)),
-                                  ),
-                                ))
+                                    /*hintText: 'Enter Promocode',*/
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Color(0xff787D86)),
+                                    ),
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8, right: 10),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (promoCodeController.text
+                                              .toString()
+                                              .isEmpty) {
+                                            EasyLoading.showToast(
+                                                'Please enter PromoCode',
+                                                toastPosition:
+                                                    EasyLoadingToastPosition
+                                                        .bottom);
+                                          } else {
+                                            promoCodeApply =
+                                                promoCodeController.text;
+                                            //promoCodeController.text=promoCodeApply;
+
+                                            _apply_PromoCode(promoCodeApply);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Apply Now',
+                                          style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            fontWeight: FontWeight.w500,
+                                            color: kYellowColor,
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ),
+                                    )))
                           ],
                         ),
                       ),
                       SizedBox(
-                        height: 25,
+                        height: 2,
                       ),
-                      Container(
-                        width: 200,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 0, right: 0, top: 35, bottom: 0),
-                          child: Container(
-                            height: 50,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                                color: kYellowColor,
-                                borderRadius: BorderRadius.circular(20.0)),
-                            child: FlatButton(
-                              onPressed: () {
-                                if(promoCodeController.text.toString().isEmpty)
-                                  {
-                                    EasyLoading.showToast('Please enter PromoCode',toastPosition:EasyLoadingToastPosition.bottom);
-                                  }
-                                else
-                                  {
-
-
-                                    _apply_PromoCode();
-                                  }
-
-                              },
-                              child: Text(
-                                'Apply Now',
-                                style: TextStyle(
-                                  fontFamily: 'Rubik',
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: 16.0,
-                                ),
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: ScrollPhysics(),
+                          itemCount: listExcitingOffersData.length,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (ctx, index) {
+                            var mdlSubData = listExcitingOffersData[index];
+                            return GestureDetector(
+                              child: Card(
+                                elevation: 0,
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white10,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(1.0))),
+                                    child: ListTile(
+                                      leading: ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100.0)),
+                                        child: CachedNetworkImage(
+                                            height: 50,
+                                            width: 50,
+                                            imageUrl: offer_baseUrl +
+                                                "/" +
+                                                mdlSubData.icon,
+                                            placeholder: (context, url) =>
+                                                Transform.scale(
+                                                  scale: 0.4,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: kYellowColor,
+                                                    strokeWidth: 3,
+                                                  ),
+                                                ),
+                                            errorWidget: (context, url,
+                                                    error) =>
+                                                Container(
+                                                    height: 40,
+                                                    width: 40,
+                                                    child: Image.asset(
+                                                        'assets/images/account_profile.png')),
+                                            fit: BoxFit.cover),
+                                      ),
+                                      title: Text(
+                                        mdlSubData.title,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                          overflow: TextOverflow.ellipsis,
+                                          fontFamily: 'Rubik',
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                          fontStyle: FontStyle.normal,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        mdlSubData.description,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.grey,
+                                          fontStyle: FontStyle.normal,
+                                          fontSize: 14.0,
+                                        ),
+                                      ),
+                                      trailing: GestureDetector(
+                                        onTap: () {
+                                          _apply_PromoCode(
+                                              mdlSubData.promocode);
+                                          ShowPromoCode = promoCodeApply;
+                                        },
+                                        child: Text(
+                                          'Apply Now',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            fontWeight: FontWeight.w500,
+                                            color: kYellowColor,
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ),
+                                    )),
                               ),
-                            ),
-                          ),
+                              onTap: () {
+                                /* Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      OffersDetails(mdlSubData.promo_code_id)));*/
+                              },
+                            );
+                          },
                         ),
                       )
                     ],
                   ),
-                )
-              ],
-            ),
-          ),
-        );
+                );
+              },
+            ));
       },
     );
   }
@@ -630,8 +738,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   _handlePaymentSuccess(PaymentSuccessResponse response) {
     paymentIdForApi = response.paymentId.toString();
     Fluttertoast.showToast(
-        msg: "SUCCESS: " +
-            response.paymentId.toString(),
+        msg: "SUCCESS: " + response.paymentId.toString(),
         timeInSecForIosWeb: 4,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
@@ -639,17 +746,15 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         textColor: Colors.white,
         fontSize: 16.0);
 
-    if(promoStatus==false)
-      {
-        _callSendPaymentId_Withought_PromoCode();
-      }
-    else
-      {
-        _callSendPaymentId_With_Promo();
-      }
-
-
-
+    if (promoStatus == false) {
+      //_callCheckKycLimit_AddMoney_Withought_Promo();
+      _callAddMoney_Withought_PromoCode();
+      setState(() {});
+    } else {
+      //_callCheckKycLimit_AddMoney_With_Promo();
+      _callAddMoney_With_Promo();
+      setState(() {});
+    }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -687,6 +792,103 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         fontSize: 16.0);
   }
 
+  _callCheckKycLimit_AddMoney_Withought_Promo() async {
+    var tokenData = '';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('AUTH_TOKEN') != null) {
+      tokenData = prefs.getString('AUTH_TOKEN') ?? '';
+    }
+    var client = http.Client();
+    EasyLoading.show(status: 'loading...');
+    try {
+      var uriResponse = await client.get(
+          Uri.parse(ApiConfig.app_base_url + ApiConfig.KYC_LIMIT),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $tokenData'
+          });
+      var dataAll = json.decode(uriResponse.body);
+      print(dataAll);
+      EasyLoading.dismiss();
+      if (uriResponse.statusCode == 200) {
+        kyc_limit_status = dataAll['status'];
+        if (dataAll['status'] == false) {
+          Fluttertoast.showToast(
+              msg: dataAll['message'],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          if (dataAll['check_status'] == 0) {
+            Fluttertoast.showToast(
+                msg: dataAll['message'],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.red,
+                timeInSecForIosWeb: 1,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            // _block_unblockUser.callLogOutApi(context);
+          }
+
+          ///_callAddMoney_With_Promo();
+        } else {
+          openCheckout();
+        }
+        setState(() {});
+      }
+    } finally {
+      client.close();
+    }
+  }
+
+  _callCheckKycLimit_AddMoney_With_Promo() async {
+    var tokenData = '';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('AUTH_TOKEN') != null) {
+      tokenData = prefs.getString('AUTH_TOKEN') ?? '';
+    }
+    var client = http.Client();
+    EasyLoading.show(status: 'loading...');
+    try {
+      var uriResponse = await client.post(
+          Uri.parse(ApiConfig.app_base_url + ApiConfig.KYC_LIMIT),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $tokenData'
+          });
+      var dataAll = json.decode(uriResponse.body);
+      print(dataAll);
+      EasyLoading.dismiss();
+      if (uriResponse.statusCode == 200) {
+        kyc_limit_status = dataAll['status'];
+        if (dataAll['status'] == false) {
+          if (dataAll['check_status'] == 0) {
+            Fluttertoast.showToast(
+                msg: dataAll['message'],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.red,
+                timeInSecForIosWeb: 1,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            //_block_unblockUser.callLogOutApi(context);
+          }
+
+          //_callAddMoney_Withought_PromoCode();
+          ///_callAddMoney_With_Promo();
+        } else {
+          _callAddMoney_With_Promo();
+        }
+        setState(() {});
+      }
+    } finally {
+      client.close();
+    }
+  }
+
   _callGetProfile() async {
     var register_token = '';
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -694,7 +896,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       register_token = prefs.getString('AUTH_TOKEN') ?? '';
     }
     var client = http.Client();
-     EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading...');
     try {
       var uriResponse = await client.get(
           Uri.parse(ApiConfig.app_base_url + ApiConfig.GET_PROFILE),
@@ -715,7 +917,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     }
   }
 
-  _callSendPaymentId_Withought_PromoCode() async {
+  _callAddMoney_Withought_PromoCode() async {
     EasyLoading.show(status: 'loading...');
     var mapBody = new Map<String, dynamic>();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -746,25 +948,24 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             timeInSecForIosWeb: 1,
             textColor: Colors.white,
             fontSize: 16.0);
-        promoCodeSend=dataAll['promo_code'];
+        promoCodeSend = dataAll['promo_code'];
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setInt("amount", dataAll["data"]['amount']);
         prefs.setString("transaction_id", dataAll["data"]['transaction_id']);
         prefs.setString("pay_on", dataAll["data"]['pay_on']);
         prefs.setString("mobile", mobile);
-
-        if(promoCodeSend==1)
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AddMoneyHistory()));
+        /* if(promoCodeSend==1)
           {
-            ShowDialog();
-            controllerTopCenter.play();
+            //ShowDialog();
+           // controllerTopCenter.play();
           }
         else
           {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddMoneyHistory()));
-          }
-
-
+          }*/
 
       } else {
         EasyLoading.dismiss();
@@ -781,7 +982,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       client.close();
     }
   }
-  _callSendPaymentId_With_Promo() async {
+
+  _callAddMoney_With_Promo() async {
     EasyLoading.show(status: 'loading...');
     var mapBody = new Map<String, dynamic>();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -790,7 +992,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     minimum_amount = prefs.getString('minimum_amount') ?? '';
     maximum_discount = prefs.getString('maximum_discount') ?? '';
     flatAndPerValue = prefs.getInt('discount')!;
-    promo_id= prefs.getInt('id')!;
+    promo_id = prefs.getInt('id')!;
     // flatAndPerValue=int.parse(prefs.getString('discount') ?? '');
     mapBody['payment_id'] = paymentIdForApi.toString();
     mapBody['promo_code_id'] = promo_id.toString();
@@ -820,24 +1022,19 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             timeInSecForIosWeb: 1,
             textColor: Colors.white,
             fontSize: 16.0);
-        promoCodeSend=dataAll['promo_code'];
+        promoCodeSend = dataAll['promo_code'];
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setInt("amount", dataAll["data"]['amount']);
         prefs.setString("transaction_id", dataAll["data"]['transaction_id']);
         prefs.setString("pay_on", dataAll["data"]['pay_on']);
 
-        if(promoCodeSend==1)
-        {
+        if (promoCodeSend == 1) {
           ShowDialog();
           controllerTopCenter.play();
-        }
-        else
-        {
-         /* Navigator.push(
+        } else {
+          /* Navigator.push(
               context, MaterialPageRoute(builder: (context) => AddMoneyHistory()));*/
         }
-
-
       } else {
         EasyLoading.dismiss();
         Fluttertoast.showToast(
@@ -855,137 +1052,141 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   }
 
   void ShowDialog() {
-    int enterAmount=int.parse(amountController.text.toString());
-    double per=flatAndPerValue/100;
-    addNoteController.text=amountController.text;
+    addNoteController.text = amountController.text;
     double _opacity = 0.8;
     showDialog(
         barrierDismissible: false,
         context: context,
         barrierColor: Color(0x00ffffff),
         builder: (BuildContext context) {
-          return BackdropFilter(
-              child:    Container(
-                color: Colors.black.withOpacity(_opacity),
-                child: AlertDialog(
-                  backgroundColor: klightYelloColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  title: Align(
-                    alignment: FractionalOffset.center,
-                    child: Container(
-                      width: 55.00,
-                      height: 55.00,
+          return WillPopScope(
+            onWillPop: () async {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PassbookScreen()));
+              return true;
+            },
+            child: BackdropFilter(
+                child: Container(
+                  color: Colors.black.withOpacity(_opacity),
+                  child: AlertDialog(
+                    backgroundColor: klightYelloColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    title: Align(
+                      alignment: FractionalOffset.center,
                       child: Container(
-                        width: 68.00,
-                        height: 68.00,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white,
-                          image: DecorationImage(
-                            scale: 2,
-                            image: ExactAssetImage('assets/images/add_money.png',),
-                            fit: BoxFit.scaleDown,
+                        width: 55.00,
+                        height: 55.00,
+                        child: Container(
+                          width: 68.00,
+                          height: 68.00,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Colors.white,
+                            image: DecorationImage(
+                              scale: 2,
+                              image: ExactAssetImage(
+                                'assets/images/add_money.png',
+                              ),
+                              fit: BoxFit.scaleDown,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  content: Container(
-                    height: 120,
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: FractionalOffset.center,
-                          child: Text(
-                            promoCodeController.text.toString()+" applied",
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black38,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 16.0,
+                    content: Container(
+                      height: 120,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: FractionalOffset.center,
+                            child: Text(
+                              ShowPromoCode + " applied",
+                              style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black38,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 16.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-
-
-
-
-
-                        Align(
-                          alignment: FractionalOffset.center,
-                          child: Text(
-                            'You have earned\n₹'+maximum_discount+' cashback',
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 14.0,
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                            alignment: FractionalOffset.center,
+                            child: Text(
+                              'You have earned\n₹' +
+                                  promoCodeValue.toString() +
+                                  ' cashback',
+                              style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 14.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Align(
-                          alignment: FractionalOffset.center,
-                          child: Text(
-                            ' with this code',
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black38,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 16.0,
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Align(
+                            alignment: FractionalOffset.center,
+                            child: Text(
+                              ' with this code',
+                              style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black38,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 16.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        GestureDetector(
-                          onTap: (){
-                            Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => AddMoneyHistory()));
-                          },child: Align(
-                          alignment: FractionalOffset.center,
-                          child: Text(
-                            'Thanks',
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontWeight: FontWeight.w500,
-                              color: kYellowColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 16.0,
-                            ),
+                          SizedBox(
+                            height: 5,
                           ),
-                        ),
-                        )
-
-                      ],
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddMoneyHistory()));
+                            },
+                            child: Align(
+                              alignment: FractionalOffset.center,
+                              child: Text(
+                                'Thanks',
+                                style: TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontWeight: FontWeight.w500,
+                                  color: kYellowColor,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
+                    actions: [],
                   ),
-                  actions: [
-
-                  ],
                 ),
-              ),
-              filter: ImageFilter.blur(sigmaX: 0.0,sigmaY: 0.0));
-
+                filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7)),
+          );
         });
   }
 
-  _apply_PromoCode() async {
+  _apply_PromoCode(String PromoCode) async {
     EasyLoading.show(status: 'loading...');
     var mapBody = new Map<String, dynamic>();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var auth_token = prefs.getString('AUTH_TOKEN') ?? '';
-    mapBody['promo_code'] = promoCodeController.text.toString();
+    mapBody['promo_code'] = PromoCode;
+    mapBody['type'] = "add";
     var client = http.Client();
 
     try {
@@ -999,96 +1200,42 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         body: mapBody,
       );
       var dataAll = json.decode(uriResponse.body);
-      promoStatus=dataAll['status'];
+      promoStatus = dataAll['status'];
 
-      if(promoStatus==false)
-        {
-          EasyLoading.dismiss();
-          Fluttertoast.showToast(
-              msg: dataAll['message'].toString(),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              backgroundColor: Colors.red,
-              timeInSecForIosWeb: 1,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
-      else
-        {
-          EasyLoading.dismiss();
-          if (uriResponse.statusCode == 200) {
-            int discount_value = dataAll["data"]['discount'];
-            int id_value = dataAll["data"]['id'];
-            Navigator.of(context).pop();
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setString("promo_code_type", dataAll["data"]['promo_code_type']);
-            prefs.setString("minimum_amount", dataAll["data"]['minimum_amount']);
-            prefs.setString("maximum_discount", dataAll["data"]['maximum_discount']);
-            prefs.setInt("discount", discount_value);
-            prefs.setInt("id", id_value);
-
-            promo_code_type = dataAll["data"]['promo_code_type'];
-            minimum_amount = dataAll["data"]['minimum_amount'];
-            maximum_discount = dataAll["data"]['maximum_discount'];
-            flatAndPerValue = discount_value;
-            promo_id= prefs.getInt('id')!;
-
-
-
-            if (int.parse(amountController.text.toString()) < int.parse(dataAll["data"]['minimum_amount'])) {
-
-              Fluttertoast.showToast(
-                  msg: 'Please Enter Valid Promo Code Amount',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  backgroundColor: Colors.orange,
-                  timeInSecForIosWeb: 1,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-              EasyLoading.dismiss();
-            }
-            else
-            {
-
-              EasyLoading.dismiss();
-              Fluttertoast.showToast(
-                  msg: dataAll['message'],
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  backgroundColor: Colors.green,
-                  timeInSecForIosWeb: 1,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-              int enterAmount=int.parse(amountController.text.toString());
-              double per=flatAndPerValue/100;
-              addNoteController.text=amountController.text;
-              if(enterAmount>=int.parse(minimum_amount))
-              {
-                if(promo_code_type== "2")
-                {
-
-                  promoCodeValue=(enterAmount * per).toDouble();
-                  if(promoCodeValue>int.parse(maximum_discount))
-                  {
-                    total_amount_withPromo=(enterAmount+double.parse(maximum_discount));
-                    addNoteController.text=total_amount_withPromo.toString();
-                  }
-                  else
-                  {
-                    total_amount_withPromo=(enterAmount+promoCodeValue);
-                    addNoteController.text=total_amount_withPromo.toString();
-                  }
-                }
-                else if(promo_code_type== "1")
-                {
-                  total_amount_withPromo=(enterAmount+flatAndPerValue).toDouble();
-                  addNoteController.text=flatAndPerValue.toString();
-
-                }
-              }
-             // Navigator.pop(context);
-              //openCheckout();
-            }
+      if (promoStatus == false) {
+        EasyLoading.dismiss();
+        Fluttertoast.showToast(
+            msg: dataAll['message'].toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.red,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        EasyLoading.dismiss();
+        if (uriResponse.statusCode == 200) {
+          promoCodeController.clear();
+          int discount_value = dataAll["data"]['discount'];
+          int id_value = dataAll["data"]['id'];
+          Navigator.of(context).pop();
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString(
+              "promo_code_type", dataAll["data"]['promo_code_type']);
+          prefs.setString("minimum_amount", dataAll["data"]['minimum_amount']);
+          prefs.setString(
+              "maximum_discount", dataAll["data"]['maximum_discount']);
+          prefs.setInt("discount", discount_value);
+          prefs.setInt("id", id_value);
+          promo_code_type = dataAll["data"]['promo_code_type'];
+          minimum_amount = dataAll["data"]['minimum_amount'];
+          maximum_discount = dataAll["data"]['maximum_discount'];
+          flatAndPerValue = discount_value;
+          promo_id = prefs.getInt('id')!;
+          if (int.parse(amountController.text.toString()) <
+              int.parse(dataAll["data"]['minimum_amount'])) {
+            _validProm_codeDialog(dataAll["data"]['minimum_amount']);
+            EasyLoading.dismiss();
           } else {
             EasyLoading.dismiss();
             Fluttertoast.showToast(
@@ -1099,15 +1246,51 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 timeInSecForIosWeb: 1,
                 textColor: Colors.white,
                 fontSize: 16.0);
-          }
-        }
 
+            ShowPromoCode = PromoCode;
+            int enterAmount = int.parse(amountController.text.toString());
+            double per = flatAndPerValue / 100;
+            //addNoteController.text=amountController.text;
+            if (enterAmount >= int.parse(minimum_amount)) {
+              if (promo_code_type == "2") {
+                promoCodeValue = (enterAmount * per).toDouble();
+                if (promoCodeValue > int.parse(maximum_discount)) {
+                  total_amount_withPromo =
+                      (enterAmount + double.parse(maximum_discount));
+                  promoCodeValue = double.parse(maximum_discount.toString());
+                  // addNoteController.text=total_amount_withPromo.toString();
+                } else {
+                  total_amount_withPromo = (enterAmount + promoCodeValue);
+                  //total_amount_withPromo=(enterAmount+promoCodeValue);
+                  // addNoteController.text=total_amount_withPromo.toString();
+                }
+              } else if (promo_code_type == "1") {
+                total_amount_withPromo =
+                    (enterAmount + flatAndPerValue).toDouble();
+                promoCodeValue = double.parse(flatAndPerValue.toString());
+                //  addNoteController.text=flatAndPerValue.toString();
+
+              }
+            }
+            // Navigator.pop(context);
+            //openCheckout();
+          }
+        } else {
+          EasyLoading.dismiss();
+          Fluttertoast.showToast(
+              msg: dataAll['message'],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      }
     } finally {
       client.close();
     }
   }
-
-
 
   Align buildConfettiWidget(controller, double blastDirection) {
     return Align(
@@ -1138,4 +1321,103 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       ),
     );
   }
+
+  _validProm_codeDialog(String amount) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return showDialog(
+      context: context,
+      barrierColor: Color(0x00ffffff),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+        child: new AlertDialog(
+          title: new Text(
+            'Error',
+            style: TextStyle(
+              fontFamily: 'Rubik',
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+              fontStyle: FontStyle.normal,
+              fontSize: 17.0,
+            ),
+          ),
+          content: new Text(
+            "Please Enter Minimum Amount " + amount + " for this Promo Code",
+            style: TextStyle(
+              fontFamily: 'Rubik',
+              fontWeight: FontWeight.w400,
+              color: Colors.black87,
+              fontStyle: FontStyle.normal,
+              fontSize: 16.0,
+            ),
+          ),
+          actions: <Widget>[
+            new Container(
+              padding: EdgeInsets.all(1),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Ink(
+                    height: 35,
+                    width: 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                    ), // LinearGradientBoxDecoration
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context, true);
+                      },
+                      customBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      splashColor: kYellowColor,
+                      child: Align(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: kYellowColor,
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: FlatButton(
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: Text(
+                              'Ok',
+                              style: TextStyle(
+                                fontFamily: 'Rubik',
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Red will correctly spread over gradient
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+    false;
+  }
+}
+
+class ExcitingOffersData {
+  String promocode = '';
+  String promocode_type = '';
+  String minimum_amount = '';
+  String maximum_discount = '';
+  String one_time_use = '';
+  String promo_code_expriration_date = '';
+  String no_of_uses = '';
+  String icon = '';
+  String title = '';
+  String description = '';
+  String promo_code_id = '';
 }

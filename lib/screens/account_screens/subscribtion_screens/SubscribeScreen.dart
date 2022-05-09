@@ -9,30 +9,33 @@ import 'package:spendzz/api_module/api_config.dart';
 import 'package:spendzz/screens/account_screens/account_screen.dart';
 import 'package:spendzz/resources/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:spendzz/screens/dashboard_screens/dashboard_main_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'SubscribeScreenDetails.dart';
 
 class SubscribeScreen extends StatefulWidget {
-  const SubscribeScreen({Key? key}) : super(key: key);
-
+  var dashboard = '';
+  SubscribeScreen(this.dashboard);
   @override
-  _SubscribeScreenState createState() => _SubscribeScreenState();
+  _SubscribeScreenState createState() => _SubscribeScreenState(dashboard);
 }
 
 class _SubscribeScreenState extends State<SubscribeScreen> {
+  var dashboard = '';
+  _SubscribeScreenState(this.dashboard);
   List<SubDataList> subData = [];
   var isDataFetched = false;
-  String gst='';
-  String amount='';
-  late int intValue ;
-  late int plan_id ;
+  String gst = '';
+  String amount = '';
+  late int intValue;
+  late int plan_id;
   late Razorpay _razorpay;
-  late String name ;
-  late String email ;
-  late String mobile ;
-  late String paymentIdForApi ;
-  late int _razorpayAmount=intValue*100;
+  late String name;
+  late String email;
+  late String mobile;
+  late String paymentIdForApi;
+  late int _razorpayAmount = intValue * 100;
   @override
   void initState() {
     super.initState();
@@ -43,13 +46,16 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
+
   @override
   void dispose() {
     super.dispose();
     _razorpay.clear();
   }
+
   void openCheckout() async {
     var options = {
+      //'key': 'rzp_live_GGUyTkH97ZWQTx',
       'key': 'rzp_test_XzDju6P1EB5RkQ',
       'amount': _razorpayAmount.toString(),
       'name': name,
@@ -65,13 +71,18 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
     } catch (e) {
       debugPrint('');
     }
-
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          previousScreen();
+          if (dashboard == "dashboardScreen") {
+            homeScreen();
+          } else {
+            accountScreen();
+          }
+
           return true;
         },
         child: Scaffold(
@@ -79,7 +90,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
           body: SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.only(bottom: 65),
-              child:  Stack(
+              child: Stack(
                 children: [
                   Container(
                     height: 250,
@@ -96,21 +107,20 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                           padding: EdgeInsets.only(top: 15),
                           child: Center(
                               child: Image.asset(
-                                "assets/images/splash_logo.png",
-                                fit: BoxFit.fitWidth,
-                                width: MediaQuery.of(context).size.width - 100,
-                              )),),
-
-
-
+                            "assets/images/splash_logo.png",
+                            fit: BoxFit.fitWidth,
+                            width: MediaQuery.of(context).size.width - 100,
+                          )),
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 35,),
+                  SizedBox(
+                    height: 35,
+                  ),
                   Container(
                     padding: EdgeInsets.only(top: 190),
-                    alignment:
-                    FractionalOffset.bottomRight,
+                    alignment: FractionalOffset.bottomRight,
                     child: Card(
                       elevation: 3,
                       margin: EdgeInsets.all(20.0),
@@ -118,7 +128,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: Container(
-                        margin: EdgeInsets.only(bottom: 35,top: 25),
+                        margin: EdgeInsets.only(bottom: 35, top: 25),
                         child: Container(
                           padding: EdgeInsets.all(1.0),
                           child: Column(
@@ -127,7 +137,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                 child: Container(
                                   child: Column(
                                     children: [
-                                      SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Align(
                                         alignment: FractionalOffset.center,
                                         child: Text(
@@ -141,11 +153,13 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Align(
                                         alignment: FractionalOffset.center,
                                         child: Text(
-                                          'Get Access of Your Wallet',
+                                          'Become our User & Get access To Wallet',
                                           style: TextStyle(
                                             fontFamily: 'Rubik',
                                             fontWeight: FontWeight.w300,
@@ -155,7 +169,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Align(
                                         alignment: FractionalOffset.center,
                                         child: Text(
@@ -169,7 +185,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Align(
                                         alignment: FractionalOffset.center,
                                         child: Text(
@@ -183,7 +201,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Align(
                                         alignment: FractionalOffset.center,
                                         child: Text(
@@ -201,26 +221,34 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                       Container(
                                         child: ListView.builder(
                                           shrinkWrap: true,
-                                          physics: NeverScrollableScrollPhysics(),
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
                                           itemCount: subData.length,
                                           //  itemCount: 23,
                                           scrollDirection: Axis.vertical,
                                           itemBuilder: (ctx, index) {
                                             var mdlSubData = subData[index];
                                             return Container(
-                                              padding: EdgeInsets.only(left: 15, right: 15, top: 5,),
+                                              padding: EdgeInsets.only(
+                                                left: 15,
+                                                right: 15,
+                                                top: 5,
+                                              ),
                                               child: Container(
-                                                padding: EdgeInsets.only(left: 15),
+                                                padding:
+                                                    EdgeInsets.only(left: 15),
                                                 child: Align(
-
-                                                  alignment: FractionalOffset.topLeft,
+                                                  alignment:
+                                                      FractionalOffset.topLeft,
                                                   child: Text(
-                                                    '> '+mdlSubData.title,
+                                                    '> ' + mdlSubData.title,
                                                     style: TextStyle(
                                                       fontFamily: 'Rubik',
-                                                      fontWeight: FontWeight.w300,
+                                                      fontWeight:
+                                                          FontWeight.w300,
                                                       color: Colors.black54,
-                                                      fontStyle: FontStyle.normal,
+                                                      fontStyle:
+                                                          FontStyle.normal,
                                                       fontSize: 16.0,
                                                     ),
                                                   ),
@@ -228,10 +256,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                               ),
                                             );
                                           },
-
                                         ),
                                       ),
-                                     /* Container(
+                                      /* Container(
                                         padding: EdgeInsets.only(left: 15),
                                         child: Align(
 
@@ -302,16 +329,10 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                           ),
                                         ),
                                       ),*/
-
                                     ],
-
                                   ),
-
                                 ),
                               ),
-
-
-
                             ],
                           ),
                         ),
@@ -322,12 +343,13 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
               ),
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
           floatingActionButton: Container(
             width: 200,
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 0, right: 0, top: 25, bottom: 0),
+              padding:
+                  const EdgeInsets.only(left: 0, right: 0, top: 25, bottom: 0),
               child: Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width,
@@ -359,12 +381,17 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
               ),
             ),
           ),
-        )
-        );
+        ));
   }
-  void previousScreen() {
+
+  void accountScreen() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AccountScreen()));
+  }
+
+  void homeScreen() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => DashboardMainScreen()));
   }
 
   _callGetSubscribeDetails() async {
@@ -374,7 +401,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
       auth_token = prefs.getString('AUTH_TOKEN') ?? '';
     }
     var client = http.Client();
-     EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading...');
     try {
       var uriResponse = await client.post(
           Uri.parse(ApiConfig.app_base_url + ApiConfig.GET_SUBSCRIBE_DETAILS),
@@ -385,33 +412,33 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
       var dataAll = json.decode(uriResponse.body);
       print(dataAll);
       EasyLoading.dismiss();
-         amount = dataAll['amount'];
-         intValue= int.parse(dataAll['amount']);
-         plan_id = (dataAll['plan_id']);
-         String intToStr = "$plan_id";
-         gst = dataAll['gst'];
-         SharedPreferences prefs = await SharedPreferences.getInstance();
-         prefs.setString('GST', dataAll['gst'].toString());
+      amount = dataAll['amount'];
+      intValue = int.parse(dataAll['amount']);
+      plan_id = (dataAll['plan_id']);
+      String intToStr = "$plan_id";
+      gst = dataAll['gst'];
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('GST', dataAll['gst'].toString());
       setState(() {
         subData.clear();
       });
-        if (uriResponse.statusCode == 200) {
-          var arrResults = dataAll['features'];
-          isDataFetched = true;
-          for (var i = 0; i < arrResults.length; i++) {
-            var dictResult = arrResults[i];
-            var mdlSubData = SubDataList();
-            mdlSubData.title = dictResult['title'].toString();
-            subData.add(mdlSubData);
-          }
-
-          setState(() {});
+      if (uriResponse.statusCode == 200) {
+        var arrResults = dataAll['features'];
+        isDataFetched = true;
+        for (var i = 0; i < arrResults.length; i++) {
+          var dictResult = arrResults[i];
+          var mdlSubData = SubDataList();
+          mdlSubData.title = dictResult['title'].toString();
+          subData.add(mdlSubData);
         }
 
+        setState(() {});
+      }
     } finally {
       client.close();
     }
   }
+
   _callGetProfile() async {
     var register_token = '';
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -419,7 +446,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
       register_token = prefs.getString('AUTH_TOKEN') ?? '';
     }
     var client = http.Client();
-     EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading...');
     try {
       var uriResponse = await client.get(
           Uri.parse(ApiConfig.app_base_url + ApiConfig.GET_PROFILE),
@@ -439,50 +466,58 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
       client.close();
     }
   }
+
   _handlePaymentSuccess(PaymentSuccessResponse response) {
-    paymentIdForApi=response.paymentId.toString();
+    paymentIdForApi = response.paymentId.toString();
     Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId.toString()
-            + response.orderId.toString()
-            + response.signature.toString()
-        , timeInSecForIosWeb: 4,
+        /*+ response.orderId.toString()
+            + response.signature.toString()*/
+        ,
+        timeInSecForIosWeb: 4,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
     _callSendPaymentId();
-
   }
+
   void _handlePaymentError(PaymentFailureResponse response) {
     Fluttertoast.showToast(
-      msg: "ERROR: " + response.code.toString() + " - " + response.message.toString(),
-      timeInSecForIosWeb: 4);
+        msg: "ERROR: " +
+            response.code.toString() +
+            " - " +
+            response.message.toString(),
+        timeInSecForIosWeb: 4);
     Fluttertoast.showToast(
-        msg: "SUCCESS: " +  response.code.toString() + " - " + response.message.toString(),
+        msg: "SUCCESS: " +
+            response.code.toString() +
+            " - " +
+            response.message.toString(),
         timeInSecForIosWeb: 4,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
-
+        fontSize: 16.0);
   }
+
   void _handleExternalWallet(ExternalWalletResponse response) {
-     Fluttertoast.showToast(
-      msg: "EXTERNAL_WALLET: " + response.walletName.toString(), timeInSecForIosWeb: 4);
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName.toString(),
+        timeInSecForIosWeb: 4);
 
     Fluttertoast.showToast(
-        msg: "SUCCESS: " +  response.walletName.toString(), timeInSecForIosWeb: 4,
+        msg: "SUCCESS: " + response.walletName.toString(),
+        timeInSecForIosWeb: 4,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
   }
+
   _callSendPaymentId() async {
     EasyLoading.show(status: 'loading...');
     var mapBody = new Map<String, dynamic>();
@@ -498,8 +533,11 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
         'Accept': 'application/json',
         'Authorization': 'Bearer $auth_token',
       };
-      var uriResponse = await client.post(Uri.parse
-        (ApiConfig.app_base_url + ApiConfig.PAYMENT_UPDATE), headers: headers,body: mapBody,);
+      var uriResponse = await client.post(
+        Uri.parse(ApiConfig.app_base_url + ApiConfig.PAYMENT_UPDATE),
+        headers: headers,
+        body: mapBody,
+      );
       var dataAll = json.decode(uriResponse.body);
       EasyLoading.dismiss();
       if (uriResponse.statusCode == 200) {
@@ -510,35 +548,26 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
             backgroundColor: Colors.green,
             timeInSecForIosWeb: 1,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SubscribeScreenDetails()));
-      }
-      else{
+            fontSize: 16.0);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SubscribeScreenDetails()));
+      } else {
         EasyLoading.dismiss();
         Fluttertoast.showToast(
             msg: dataAll['message'],
-            toastLength:  Toast.LENGTH_SHORT,
+            toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.green,
             timeInSecForIosWeb: 1,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
-
+            fontSize: 16.0);
       }
     } finally {
       client.close();
     }
   }
-
-
 }
 
 class SubDataList {
   String title = '';
 }
-
-
-

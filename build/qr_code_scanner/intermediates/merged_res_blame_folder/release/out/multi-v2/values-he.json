@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\qr_code_scanner\\intermediates\\res\\merged\\release\\values-he\\values-he.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\6d75a57e7561497a9b71e1a1793c682c\\transformed\\jetified-zxing-android-embedded-4.3.0\\res\\values-he\\values-he.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,111,161,296",
+                        "endColumns": "55,49,134,89",
+                        "endOffsets": "106,156,291,381"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\qr_code_scanner\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-he\\values-he.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\6d75a57e7561497a9b71e1a1793c682c\\transformed\\jetified-zxing-android-embedded-4.3.0\\res\\values-he\\values-he.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,111,161,296",
+                        "endColumns": "55,49,134,89",
+                        "endOffsets": "106,156,291,381"
+                    }
+                }
+            ]
+        }
+    ]
+}

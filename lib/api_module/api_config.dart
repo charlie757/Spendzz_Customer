@@ -3,7 +3,7 @@ class ApiConfig {
 //https://doapi.alphonic.net.in
   static const String app_base_url = 'https://testalphonic.com/projects/ramkesh/spendzz/api/user/v2/';
   //static const String app_base_url = 'http://127.0.0.1:8000/spendzz/api/user/v2/';
-
+  //static const String app_base_url = 'https://spendzz.com/api/user/v2/';
   static const String SIGNUP_WITH_MOBILE = 'sign-up';
   static const String VERIFY_OTP = 'verify-otp';
   static const String SIGNUP_COMPLETE = 'sign-complete';
@@ -34,9 +34,11 @@ class ApiConfig {
   static const String TRANSACTION_HISTORY ='user-transaction-history';
   static const String CHECK_VALID_NUMBER ='find-number-to-pay';
   static const String SEND_MONEY_TO_MERCHANT ='send-money-to-merchant';
-
+  static const String SEND_MONEY_TO_CUSTOMER ='send-money-to-customer';
   static const String FEATURED_MERCHANT_CATEGORY ='merchant-categories';
-  static const String PROMO_CODE_LIST ='promo-code-list';
+  static const String PROMO_CODE_LIST_BOTH ='promo-code-list/both';
+  static const String PROMO_CODE_LIST_ADD_MONEY ='promo-code-list/add';
+  static const String PROMO_CODE_LIST_PAY_MONEY ='promo-code-list/send';
   static const String PROMO_CODE_DETAILS ='promo-code-info';
   static const String SINGLE_MERCHANT_CATEGORY_LIST ='shop-info-category-wise';
   static const String CATEGORY_DETAIL ='shop-details-by-id';
@@ -46,14 +48,18 @@ class ApiConfig {
   static const String SUBMIT_TICKETS ='raise-ticket';
   static const String SUBMIT_FORMAL_TICKETS ='formal-raise-ticket';
   static const String ALL_TICKETS_LIST ='raise-ticket-list';
-  static const String TRANSACTION_HISTORY_TICKET ='user-transaction-details';
+  static const String TRANSACTION_HISTORY_DETAILS ='user-transaction-details';
   static const String FILTER_HISTORY ='transaction-filter';
   static const String TICKET_REPLAY_LIST ='reply-to-ticket-list/';
   static const String TICKET_REPLAY_MESSAGE ='reply-to-ticket';
   static const String SUBSCRIBE_SCREEN_STATUS ='subscription-status';
   static const String REFERRAL_CODE ='customer-referral-code';
-
-
+  static const String GET_CUSTOMER_QR_CODE = 'customer-qr-code';
+  static const String NOTIFICATIONS = 'notifications-list-customer';
+  static const String KYC_LIMIT = 'check-kyc-updated';
+ // https://testalphonic.com/projects/ramkesh/spendzz/api/user/v2/notifications-list-customer
+  static const String RESEND_CONTACT = 'last-contacts';
+  //https://testalphonic.com/projects/ramkesh/spendzz/api/user/v2/customer-qr-code
   /*https://testalphonic.com/projects/ramkesh/spendzz/api/user/v2/reply-to-ticket
   ticket_id:12374850
   message:nop

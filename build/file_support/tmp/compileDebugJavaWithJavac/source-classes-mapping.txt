@@ -1,0 +1,4 @@
+com/example/file_support/FileSupportPlugin.java
+ com.example.file_support.FileSupportPlugin
+com/example/file_support/BuildConfig.java
+ com.example.file_support.BuildConfig

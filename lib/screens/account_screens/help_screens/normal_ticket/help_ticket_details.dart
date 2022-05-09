@@ -19,7 +19,7 @@ import 'package:spendzz/screens/dashboard_screens/dashboard_main_screen.dart';
 import 'package:spendzz/resources/constants.dart';
 import 'package:http/http.dart' as http;
 import '../../manage_cards_screens/input_formatters.dart';
-import 'normal_help_screen.dart';
+import 'all_help_ticket_screen.dart';
 
 class Raise_Ticket_Normal_Detail extends StatefulWidget {
   var ticketId = '';
@@ -136,12 +136,11 @@ class _Raise_Ticket_Normal_DetailState extends State<Raise_Ticket_Normal_Detail>
   _checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('AUTH_TOKEN') != null) {
-      _callTransactionHistory(prefs.getString('AUTH_TOKEN').toString());
+      _callReplayTicket(prefs.getString('AUTH_TOKEN').toString());
     }
     setState(() {});
   }
-
-  _callTransactionHistory(String tokenData) async {
+  _callReplayTicket(String tokenData) async {
     var auth_token = '';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('AUTH_TOKEN') != null) {
@@ -152,8 +151,7 @@ class _Raise_Ticket_Normal_DetailState extends State<Raise_Ticket_Normal_Detail>
     try {
       var uriResponse = await client.get(
           Uri.parse(ApiConfig.app_base_url +
-              ApiConfig.TICKET_REPLAY_LIST +
-              /*ticketId.toString()*/'12374850'),
+              ApiConfig.TICKET_REPLAY_LIST + ticketId.toString()),
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer $auth_token'
@@ -224,7 +222,10 @@ class _Raise_Ticket_Normal_DetailState extends State<Raise_Ticket_Normal_Detail>
                           height: 20,
                           width: 20,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => AllHelpTicket('')));
+                        },
                       ),
                       Text(
                         '#' + ticketId,
@@ -481,10 +482,13 @@ class _Raise_Ticket_Normal_DetailState extends State<Raise_Ticket_Normal_Detail>
                                                               mainAxisSize: MainAxisSize.max,
                                                               children: [
                                                                 Container(
+                                                                    width: MediaQuery.of(context).size.width/2,
                                                                     alignment: Alignment.topLeft,
                                                                     child: Text(
                                                                       mdlSubData.name,
+                                                                      maxLines: 2,
                                                                       style: TextStyle(
+
                                                                         fontFamily: 'Rubik',
                                                                         fontWeight: FontWeight.w500,
                                                                         color: Colors.black,
@@ -915,7 +919,7 @@ class _Raise_Ticket_Normal_DetailState extends State<Raise_Ticket_Normal_Detail>
           fontSize: 16.0);
       print(allJson);
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => NormalHelpScreen('')));
+          MaterialPageRoute(builder: (context) => AllHelpTicket('')));
 
     } else {
       Fluttertoast.showToast(

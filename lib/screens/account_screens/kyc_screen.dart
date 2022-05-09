@@ -63,8 +63,18 @@ class _Kyc_screenState extends State<Kyc_screen> {
   bool is_login_status = false;
   var aadhaarFrontImage = '';
   late String statusText = '';
-
   late String massageText = '';
+
+  //profession Data
+  late String ProfessionId = '';
+  late String? chooseValueProfession = '';
+  List<ProfessionCategory> listProfessionCategoryDataArray = [];
+
+  //Salary Data
+  late String SalaryId = '';
+  late String chooseValueSalary = '';
+  List<SalaryCategory> listSalaryCategoryDataArray = [];
+  bool KycStatusBool = false;
 
   @override
   void initState() {
@@ -211,7 +221,8 @@ class _Kyc_screenState extends State<Kyc_screen> {
 
   Future getImageFromCamera_selfieImage() async {
     var pickedFile;
-    var pickedFiletemp = await picker.getImage(source: ImageSource.camera);
+    var pickedFiletemp = await picker.getImage(
+        source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
     var profimage = File(pickedFiletemp!.path);
     var aargs = await Navigator.of(context).push(
       PageRouteBuilder(
@@ -242,15 +253,98 @@ class _Kyc_screenState extends State<Kyc_screen> {
     setState(() {});
   }
 
-  _callProfessionCategoryApiInDataListings(String tokenData) async {
-    var mapBody = new Map<String, dynamic>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  _callGetKysStatus(String tokenData) async {
+    var client = http.Client();
+    EasyLoading.show(status: 'loading...');
+    try {
+      var uriResponse = await client.get(
+          Uri.parse(ApiConfig.app_base_url + ApiConfig.GET_KYC_STATUS),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $tokenData'
+          });
+      var dataAll = json.decode(uriResponse.body);
+      print(dataAll);
+      EasyLoading.dismiss();
+      if (uriResponse.statusCode == 200) {
+        kyc_status = dataAll['kyc_is_submitted'];
+        KycStatusBool = dataAll['status'];
+        if (kyc_status == 1 && KycStatusBool == true) {
+          statusText = "KYC Approved";
+        } else if (kyc_status == 0 && KycStatusBool == false) {
+          statusText = "KYC Rejected";
+        } else if (kyc_status == 1 && KycStatusBool == false) {
+          statusText = "KYC Under Process";
+        } else if (kyc_status == 2 && KycStatusBool == false) {
+          statusText = "";
+        }
+        /*if (kyc_status == 0) {
+          statusText = "Reject";
+        } else {
+          statusText = 'Approved';
+        }*/
+        setState(() {});
+      }
+    } finally {
+      client.close();
+    }
+  }
+
+  _callGetKycDetails(String tokenData) async {
+    var client = http.Client();
+    EasyLoading.show(status: 'loading...');
+    try {
+      var uriResponse = await client.post(
+          Uri.parse(ApiConfig.app_base_url + ApiConfig.GET_KYC_DETAILS),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $tokenData'
+          });
+      var dataAll = json.decode(uriResponse.body);
+      print(dataAll);
+      EasyLoading.dismiss();
+      if (uriResponse.statusCode == 200) {
+        var arrData = dataAll['data'];
+        if (dataAll['status'] == false) {}
+
+        imagesBaseUrl = dataAll['file_url'].toString();
+        for (var i = 0; i < arrData.length; i++) {
+          var dictFaq = arrData[i];
+
+          if (dictFaq['kyc_status'].toString() == "2") {
+            //chooseValueProfession = dictFaq['profession_type'].toString();
+            //chooseValueSalary = dictFaq['salary'].toString();
+            chooseValueProfession = "";
+            chooseValueSalary = "";
+          } else {
+            aadhaarNoController.text = dictFaq['aadhar_no'].toString();
+            aadhaarFrontImage =
+                imagesBaseUrl + "/" + dictFaq['aadhar_front'].toString();
+            aadhaarBackImage =
+                imagesBaseUrl + "/" + dictFaq['aadhar_back'].toString();
+            selfieImage = imagesBaseUrl + "/" + dictFaq['selfie'].toString();
+            chooseValueProfession = dictFaq['profession_type'].toString();
+            chooseValueSalary = dictFaq['salary'].toString();
+            _callProfessionCategoryApiInDataListings(tokenData);
+          }
+
+          setState(() {});
+        }
+      }
+    } finally {
+      client.close();
+    }
+  }
+
+  _callProfessionCategoryApiInDataListings(
+    String tokenData,
+  ) async {
     Map<String, String> headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $tokenData',
     };
     var client = http.Client();
-     EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading...');
     try {
       var uriResponse = await client.get(
           Uri.parse(ApiConfig.app_base_url + ApiConfig.PROFESSION_TYPE),
@@ -269,10 +363,8 @@ class _Kyc_screenState extends State<Kyc_screen> {
           var mdlProducts = ProfessionCategory();
           mdlProducts.id = dictFaq['id'].toString();
           mdlProducts.name = dictFaq['title'].toString();
-          ;
+          //chooseValueProfession=mdlProducts.id;
           listProfessionCategoryDataArray.add(mdlProducts);
-          //  statesList.add(mdlProducts);
-          /*statesList = dictFaq['id'].toString();*/
         }
         setState(() {});
       }
@@ -282,13 +374,12 @@ class _Kyc_screenState extends State<Kyc_screen> {
   }
 
   _callSalaryCategoryApiInDataListings(String tokenData) async {
-    var mapBody = new Map<String, dynamic>();
     Map<String, String> headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $tokenData',
     };
     var client = http.Client();
-     EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading...');
     try {
       var uriResponse = await client.get(
           Uri.parse(ApiConfig.app_base_url + ApiConfig.SALARY),
@@ -307,6 +398,7 @@ class _Kyc_screenState extends State<Kyc_screen> {
           var mdlProducts = SalaryCategory();
           mdlProducts.id = dictFaq['id'].toString();
           mdlProducts.amount = dictFaq['title'].toString();
+          // chooseValueSalary=mdlProducts.id;
           listSalaryCategoryDataArray.add(mdlProducts);
         }
         setState(() {});
@@ -315,85 +407,6 @@ class _Kyc_screenState extends State<Kyc_screen> {
       client.close();
     }
   }
-
-  _callGetKysStatus(String tokenData) async {
-    var client = http.Client();
-     EasyLoading.show(status: 'loading...');
-    try {
-      var uriResponse = await client.get(
-          Uri.parse(ApiConfig.app_base_url + ApiConfig.GET_KYC_STATUS),
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $tokenData'
-          });
-      var dataAll = json.decode(uriResponse.body);
-      print(dataAll);
-      EasyLoading.dismiss();
-      if (uriResponse.statusCode == 200) {
-        kyc_status = dataAll['kyc_is_submitted'];
-        massageText = dataAll['message'];
-        if (kyc_status == 0) {
-          statusText = "";
-        } else {
-          statusText = massageText;
-        }
-        setState(() {});
-      }
-    } finally {
-      client.close();
-    }
-  }
-
-  _callGetKycDetails(String tokenData) async {
-    var client = http.Client();
-     EasyLoading.show(status: 'loading...');
-    try {
-      var uriResponse = await client.post(
-          Uri.parse(ApiConfig.app_base_url + ApiConfig.GET_KYC_DETAILS),
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $tokenData'
-          });
-      var dataAll = json.decode(uriResponse.body);
-
-      print(dataAll);
-      EasyLoading.dismiss();
-      if (uriResponse.statusCode == 200) {
-        var arrData = dataAll['data'];
-        if (dataAll['status'] == false) {
-          chooseValueProfession = 'select one';
-          chooseValueSalary = 'select one';
-        }
-
-        imagesBaseUrl = dataAll['file_url'].toString();
-        for (var i = 0; i < arrData.length; i++) {
-          var dictFaq = arrData[i];
-          //var mdlProducts = SalaryCategory();
-          aadhaarNoController.text = dictFaq['aadhar_no'].toString();
-          aadhaarFrontImage =
-              imagesBaseUrl + "/" + dictFaq['aadhar_front'].toString();
-          aadhaarBackImage =
-              imagesBaseUrl + "/" + dictFaq['aadhar_back'].toString();
-          selfieImage = imagesBaseUrl + "/" + dictFaq['selfie'].toString();
-          chooseValueProfession = dictFaq['profession_type'].toString();
-          chooseValueSalary = dictFaq['salary'].toString();
-          setState(() {});
-        }
-      }
-    } finally {
-      client.close();
-    }
-  }
-
-  //profession Data
-  late String ProfessionId = '';
-  late String? chooseValueProfession = 'Choose Profession';
-  List<ProfessionCategory> listProfessionCategoryDataArray = [];
-
-  //Salary Data
-  late String SalaryId = '';
-  late String chooseValueSalary = 'Choose Salary';
-  List<SalaryCategory> listSalaryCategoryDataArray = [];
 
   @override
   Widget build(BuildContext context) {
@@ -450,568 +463,289 @@ class _Kyc_screenState extends State<Kyc_screen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (kyc_status == 0)
-                            ...[
+                          if (kyc_status == 1 && KycStatusBool == true) ...[
+                            Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 58,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  color: klightYelloColor,
+                                  // No such attribute
+                                ),
+                                child: Align(
+                                  alignment: FractionalOffset.center,
+                                  child: Text(
+                                    statusText,
+                                    style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.green,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                )),
+                          ] else if (kyc_status == 0 &&
+                              KycStatusBool == false) ...[
+                            Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 58,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  color: klightYelloColor,
+                                  // No such attribute
+                                ),
+                                child: Align(
+                                  alignment: FractionalOffset.center,
+                                  child: Text(
+                                    statusText,
+                                    style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.red,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                )),
+                          ] else if (kyc_status == 1 &&
+                              KycStatusBool == false) ...[
+                            Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 58,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  color: klightYelloColor,
+                                  // No such attribute
+                                ),
+                                child: Align(
+                                  alignment: FractionalOffset.center,
+                                  child: Text(
+                                    statusText,
+                                    style: TextStyle(
+                                      fontFamily: 'Rubik',
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.orangeAccent,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                )),
+                          ] else
+                            ...[],
 
-                            ]
-                          else ...[
-                            if (massageText ==
-                                'Your KYC has been Accepted') ...[
-                              Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 58,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    color: klightYelloColor,
-                                    // No such attribute
+                          //todo Profession DropDown Code
+                          Container(
+                            padding:
+                                EdgeInsets.only(left: 0, right: 0, top: 15),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: 5, right: 5, top: 15),
+                                  child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: FractionalOffset.topLeft,
+                                        child: Text(
+                                          'Profession',
+                                          style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black,
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                      ),
+                                      if (kyc_status == 0 &&
+                                              KycStatusBool == false ||
+                                          kyc_status == 2 &&
+                                              KycStatusBool == false) ...[
+                                        DropdownButtonFormField(
+                                          value:
+                                              chooseValueProfession!.isNotEmpty
+                                                  ? chooseValueProfession
+                                                  : null,
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          decoration: InputDecoration(
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color:
+                                                              Colors.black54))),
+                                          iconSize: 24,
+                                          elevation: 16,
+                                          isExpanded: true,
+                                          hint: Text(
+                                              chooseValueProfession.toString()),
+                                          onChanged: (String? newValue) {
+                                            chooseValueProfession =
+                                                newValue.toString();
+                                            debugPrint('sdjnfsjkdfsf' +
+                                                '$chooseValueProfession');
+                                          },
+                                          items: listProfessionCategoryDataArray
+                                              .map((item) {
+                                            return new DropdownMenuItem(
+                                              value: item.id,
+                                              child: Text(
+                                                item.name.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black
+                                                        .withOpacity(0.7)),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ] else ...[
+                                        DropdownButtonFormField(
+                                          value:
+                                              chooseValueProfession!.isNotEmpty
+                                                  ? chooseValueProfession
+                                                  : null,
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          decoration: InputDecoration(
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color:
+                                                              Colors.black54))),
+                                          iconSize: 24,
+                                          elevation: 16,
+                                          isExpanded: true,
+                                          hint: Text(
+                                              chooseValueProfession.toString()),
+                                          onChanged: null,
+                                          items: listProfessionCategoryDataArray
+                                              .map((item) {
+                                            return new DropdownMenuItem(
+                                              value: item.id,
+                                              child: Text(
+                                                item.name.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black
+                                                        .withOpacity(0.7)),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ]
+                                    ],
                                   ),
-                                  child: Align(
-                                    alignment: FractionalOffset.center,
-                                    child: Text(
-                                      statusText,
-                                      style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.green,
-                                        fontStyle: FontStyle.normal,
-                                        fontSize: 14.0,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          //todo Salary DropDown Code
+                          Container(
+                            padding:
+                                EdgeInsets.only(left: 0, right: 0, top: 15),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: 5, right: 5, top: 15),
+                                  child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: FractionalOffset.topLeft,
+                                        child: Text(
+                                          'Salary',
+                                          style: TextStyle(
+                                            fontFamily: 'Rubik',
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black,
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  )),
-                            ] else ...[
-                              Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 58,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    color: klightYelloColor,
-                                    // No such attribute
+                                      if (kyc_status == 0 &&
+                                              KycStatusBool == false ||
+                                          kyc_status == 2 &&
+                                              KycStatusBool == false) ...[
+                                        DropdownButtonFormField(
+                                          value: chooseValueSalary.isNotEmpty
+                                              ? chooseValueSalary
+                                              : null,
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          decoration: InputDecoration(
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color:
+                                                              Colors.black54))),
+                                          iconSize: 24,
+                                          elevation: 16,
+                                          isExpanded: true,
+                                          hint: Text(
+                                              chooseValueSalary.toString()),
+                                          onChanged: (String? newValue) {
+                                            chooseValueSalary =
+                                                newValue.toString();
+                                            debugPrint('sdjnfsjkdfsf' +
+                                                '$chooseValueSalary');
+                                          },
+                                          items: listSalaryCategoryDataArray
+                                              .map((item) {
+                                            return new DropdownMenuItem(
+                                              value: item.id,
+                                              child: Text(
+                                                item.amount.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black
+                                                        .withOpacity(0.7)),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ] else ...[
+                                        DropdownButtonFormField(
+                                          value: chooseValueSalary.isNotEmpty
+                                              ? chooseValueSalary
+                                              : null,
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          decoration: InputDecoration(
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color:
+                                                              Colors.black54))),
+                                          iconSize: 24,
+                                          elevation: 16,
+                                          isExpanded: true,
+                                          hint: Text(
+                                              chooseValueSalary.toString()),
+                                          onChanged: null,
+                                          items: listSalaryCategoryDataArray
+                                              .map((item) {
+                                            return new DropdownMenuItem(
+                                              value: item.id,
+                                              child: Text(
+                                                item.amount.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black
+                                                        .withOpacity(0.7)),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ]
+                                    ],
                                   ),
-                                  child: Align(
-                                    alignment: FractionalOffset.center,
-                                    child: Text(
-                                      statusText,
-                                      style: TextStyle(
-                                        fontFamily: 'Rubik',
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black54,
-                                        fontStyle: FontStyle.normal,
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                  )),
-                            ],
-                          ],
-                          if (chooseValueProfession == 'select one') ...[
-                            if (kyc_status == 0) ...[
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 5, right: 5, top: 15),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 15),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: FractionalOffset.topLeft,
-                                            child: Text(
-                                              'Profession',
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownButtonFormField(
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            decoration: InputDecoration(
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors
-                                                                .black54))),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            isExpanded: true,
-                                            hint: Text(chooseValueProfession!),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                if (newValue != null) {
-                                                  chooseValueProfession ==
-                                                      newValue;
-                                                  ProfessionId =
-                                                      newValue.toString();
-                                                  chooseValueProfession =
-                                                      newValue.toString();
-                                                }
-                                              });
-                                            },
-                                            items:
-                                                listProfessionCategoryDataArray
-                                                    .map((item) {
-                                              return new DropdownMenuItem(
-                                                value: item.id.toString(),
-                                                child: Text(
-                                                  item.name.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              ),
-                            ] else ...[
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 5, right: 5, top: 15),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 15),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: FractionalOffset.topLeft,
-                                            child: Text(
-                                              'Profession',
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownButtonFormField(
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            decoration: InputDecoration(
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors
-                                                                .black54))),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            isExpanded: true,
-                                            hint: Text(chooseValueProfession!),
-                                            onChanged: null,
-                                            items:
-                                                listProfessionCategoryDataArray
-                                                    .map((item) {
-                                              return new DropdownMenuItem(
-                                                value: item.id.toString(),
-                                                child: Text(
-                                                  item.name.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ] else ...[
-                            if (kyc_status == 0) ...[
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 5, right: 5, top: 15),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 15),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: FractionalOffset.topLeft,
-                                            child: Text(
-                                              'Profession',
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownButtonFormField(
-                                            value: chooseValueProfession,
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            decoration: InputDecoration(
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors
-                                                                .black54))),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            isExpanded: true,
-                                            hint: Text(chooseValueProfession!),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                if (newValue != null) {
-                                                  ProfessionId =
-                                                      newValue.toString();
-                                                  chooseValueProfession =
-                                                      newValue.toString();
-                                                }
-                                              });
-                                            },
-                                            items:
-                                                listProfessionCategoryDataArray
-                                                    .map((item) {
-                                              return new DropdownMenuItem(
-                                                value: item.id.toString(),
-                                                child: Text(
-                                                  item.name.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ] else ...[
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 5, right: 5, top: 15),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 15),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: FractionalOffset.topLeft,
-                                            child: Text(
-                                              'Profession',
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownButtonFormField(
-                                            value: chooseValueProfession,
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            decoration: InputDecoration(
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors
-                                                                .black54))),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            isExpanded: true,
-                                            hint: Text(chooseValueProfession!),
-                                            onChanged: null,
-                                            items:
-                                                listProfessionCategoryDataArray
-                                                    .map((item) {
-                                              return new DropdownMenuItem(
-                                                value: item.id.toString(),
-                                                child: Text(
-                                                  item.name.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ],
-                          if (chooseValueSalary == 'select one') ...[
-                            if (kyc_status == 0) ...[
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 5, right: 5, top: 15),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 15),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: FractionalOffset.topLeft,
-                                            child: Text(
-                                              'Salary',
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownButtonFormField(
-                                            //value: chooseValueSalary,
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            decoration: InputDecoration(
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors
-                                                                .black54))),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            isExpanded: true,
-                                            hint: Text(chooseValueSalary),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                if (value != null) {
-                                                  chooseValueSalary == value;
-                                                  SalaryId = value.toString();
-                                                  chooseValueSalary =
-                                                      value.toString();
-                                                }
-                                              });
-                                            },
-                                            items: listSalaryCategoryDataArray.map(
-                                                (item) /*DropdownMenuItem<ProfessionCategory>>((ProfessionCategory values)*/ {
-                                              return new DropdownMenuItem(
-                                                value: item.id.toString(),
-                                                child: Text(
-                                                  item.amount.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ] else ...[
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 5, right: 5, top: 15),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 15),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: FractionalOffset.topLeft,
-                                            child: Text(
-                                              'Salary',
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownButtonFormField(
-                                            //value: chooseValueSalary,
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            decoration: InputDecoration(
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors
-                                                                .black54))),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            isExpanded: true,
-                                            hint: Text(chooseValueSalary),
-                                            onChanged: null,
-                                            items: listSalaryCategoryDataArray.map(
-                                                (item) /*DropdownMenuItem<ProfessionCategory>>((ProfessionCategory values)*/ {
-                                              return new DropdownMenuItem(
-                                                value: item.id.toString(),
-                                                child: Text(
-                                                  item.amount.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ] else ...[
-                            if (kyc_status == 0) ...[
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 5, right: 5, top: 15),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 15),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: FractionalOffset.topLeft,
-                                            child: Text(
-                                              'Salary',
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownButtonFormField(
-                                            value: chooseValueSalary,
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            decoration: InputDecoration(
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors
-                                                                .black54))),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            isExpanded: true,
-                                            hint: Text(chooseValueSalary),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                if (newValue != null) {
-                                                  SalaryId =
-                                                      newValue.toString();
-                                                  chooseValueSalary =
-                                                      newValue.toString();
-                                                }
-                                              });
-                                            },
-                                            items: listSalaryCategoryDataArray.map(
-                                                (item) /*DropdownMenuItem<ProfessionCategory>>((ProfessionCategory values)*/ {
-                                              return new DropdownMenuItem(
-                                                value: item.id.toString(),
-                                                child: Text(
-                                                  item.amount.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ] else ...[
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 5, right: 5, top: 15),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 15),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: FractionalOffset.topLeft,
-                                            child: Text(
-                                              'Salary',
-                                              style: TextStyle(
-                                                fontFamily: 'Rubik',
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          DropdownButtonFormField(
-                                            //value: chooseValueSalary,
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            decoration: InputDecoration(
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors
-                                                                .black54))),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            isExpanded: true,
-                                            hint: Text(chooseValueSalary),
-                                            onChanged: null,
-                                            items: listSalaryCategoryDataArray.map(
-                                                (item) /*DropdownMenuItem<ProfessionCategory>>((ProfessionCategory values)*/ {
-                                              return new DropdownMenuItem(
-                                                value: item.id.toString(),
-                                                child: Text(
-                                                  item.amount.toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ],
+                              ],
+                            ),
+                          ),
+
                           SizedBox(
                             height: 10,
                           ),
@@ -1032,11 +766,15 @@ class _Kyc_screenState extends State<Kyc_screen> {
                                     ),
                                   ),
                                 ),
-                                if (kyc_status == 0) ...[
+                                if (kyc_status == 0 || kyc_status == 2) ...[
                                   TextField(
                                       keyboardType: TextInputType.number,
                                       inputFormatters: [
-                                        LengthLimitingTextInputFormatter(12),
+                                        //LengthLimitingTextInputFormatter(12),
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        new LengthLimitingTextInputFormatter(
+                                            12),
+                                        // new CardNumberInputFormatter()
                                       ],
                                       textCapitalization:
                                           TextCapitalization.characters,
@@ -1184,7 +922,8 @@ class _Kyc_screenState extends State<Kyc_screen> {
                                                           fit: BoxFit.fill),
                                                     ),
                                                   ),
-                                                  if (kyc_status == 0) ...[
+                                                  if (kyc_status == 0 ||
+                                                      kyc_status == 2) ...[
                                                     GestureDetector(
                                                       onTap: () {
                                                         _actionSheet_aadhaarFrontImage(
@@ -1346,7 +1085,8 @@ class _Kyc_screenState extends State<Kyc_screen> {
                                                           fit: BoxFit.fill),
                                                     ),
                                                   ),
-                                                  if (kyc_status == 0) ...[
+                                                  if (kyc_status == 0 ||
+                                                      kyc_status == 2) ...[
                                                     GestureDetector(
                                                       onTap: () {
                                                         _actionSheet_aadhaarBackImage(
@@ -1496,7 +1236,8 @@ class _Kyc_screenState extends State<Kyc_screen> {
                                               fit: BoxFit.fill),
                                         ),
                                       ),
-                                      if (kyc_status == 0) ...[
+                                      if (kyc_status == 0 ||
+                                          kyc_status == 2) ...[
                                         GestureDetector(
                                           onTap: () async {
                                             getImageFromCamera_selfieImage();
@@ -1566,7 +1307,7 @@ class _Kyc_screenState extends State<Kyc_screen> {
             ),
             child: Stack(
               children: [
-                if (kyc_status == 0) ...[
+                if (kyc_status == 0 || kyc_status == 2) ...[
                   Padding(
                     padding:
                         const EdgeInsets.only(left: 0.0, right: 0.0, bottom: 0),
@@ -1581,26 +1322,32 @@ class _Kyc_screenState extends State<Kyc_screen> {
                             borderRadius: BorderRadius.circular(20.0)),
                         child: FlatButton(
                           onPressed: () {
-                            if (chooseValueProfession == 'select one') {
+                            String patttern = r'(^(?:[+0]9)?[0-9]{12,12}$)';
+                            RegExp regExp = new RegExp(patttern.trim());
+                            if (chooseValueProfession == '') {
                               EasyLoading.showToast(
                                   'Please select Profession Category');
-                            } else if (chooseValueSalary == 'select one') {
-                              EasyLoading.showToast('Please select Salary Category');
-                            }
-                            else if (aadhaarNoController.text.isEmpty) {
-                              EasyLoading.showToast('Please enter Aadhar.');
-                            }
-                            else if (_aadhaarFrontImage==null) {
-                              EasyLoading.showToast('Please select Aadhaar Front Image.');
-                            }
-                            else if (_aadhaarBackImage==null) {
-                              EasyLoading.showToast('Please select Aadhaar Back Image.');
-                            }
-                            else if (_selfieImage==null) {
-                              EasyLoading.showToast('Please select SelfieImage.');
-                            }
-
-                            else {
+                            } else if (chooseValueSalary == '') {
+                              EasyLoading.showToast(
+                                  'Please select Salary Category');
+                            } else if (aadhaarNoController.text.isEmpty) {
+                              EasyLoading.showToast('Please Enter Aadhaar No');
+                              return;
+                            } else if (!regExp
+                                .hasMatch(aadhaarNoController.text)) {
+                              EasyLoading.showToast(
+                                  'Please Enter 12 Digits Aadhaar No');
+                              return;
+                            } else if (_aadhaarFrontImage == null) {
+                              EasyLoading.showToast(
+                                  'Please select Aadhaar Front Image.');
+                            } else if (_aadhaarBackImage == null) {
+                              EasyLoading.showToast(
+                                  'Please select Aadhaar Back Image.');
+                            } else if (_selfieImage == null) {
+                              EasyLoading.showToast(
+                                  'Please select SelfieImage.');
+                            } else {
                               _callUpdateKyc();
                             }
                           },
@@ -1618,36 +1365,8 @@ class _Kyc_screenState extends State<Kyc_screen> {
                       ),
                     ),
                   )
-                ] else ...[
-                  /*Padding(
-                    padding:
-                        const EdgeInsets.only(left: 0.0, right: 0.0, bottom: 0),
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 25),
-                      child: Container(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width - 200,
-                        decoration: BoxDecoration(
-                            color: Colors.black38,
-                            // borderRadius: BorderRadius.horizontal()),
-                            borderRadius: BorderRadius.circular(20.0)),
-                        child: FlatButton(
-                          onPressed: null,
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )*/
-                ],
+                ] else
+                  ...[],
               ],
             ),
           )),
@@ -1655,8 +1374,8 @@ class _Kyc_screenState extends State<Kyc_screen> {
   }
 
   void nextScreen() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CategoryDetails('','','')));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => CategoryDetails('', '', '')));
   }
 
   void previousScreen() {
@@ -1704,7 +1423,6 @@ class _Kyc_screenState extends State<Kyc_screen> {
     var allJson = json.decode(vb.body);
     if (vb.statusCode == 200) {
       EasyLoading.dismiss();
-
       Fluttertoast.showToast(
           msg: allJson['message'].toString(),
           toastLength: Toast.LENGTH_SHORT,
@@ -1716,10 +1434,6 @@ class _Kyc_screenState extends State<Kyc_screen> {
       setState(() {});
       _callGetKycDetails(prefs.getString('AUTH_TOKEN').toString());
       previousScreen();
-
-      //saveScreen();
-      //print(allJson);
-
     } else {
       Fluttertoast.showToast(
           msg: allJson['message'].toString(),

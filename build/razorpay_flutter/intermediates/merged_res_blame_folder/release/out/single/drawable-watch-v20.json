@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\razorpay_flutter\\intermediates\\res\\merged\\release\\drawable-watch-v20\\common_google_signin_btn_text_light_normal.xml",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\859a4d5c86402f34d10a0b501b787f41\\transformed\\jetified-play-services-auth-17.0.0\\res\\drawable-watch-v20\\common_google_signin_btn_text_light_normal.xml"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\razorpay_flutter\\intermediates\\res\\merged\\release\\drawable-watch-v20\\common_google_signin_btn_text_disabled.xml",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\859a4d5c86402f34d10a0b501b787f41\\transformed\\jetified-play-services-auth-17.0.0\\res\\drawable-watch-v20\\common_google_signin_btn_text_disabled.xml"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\razorpay_flutter\\intermediates\\res\\merged\\release\\drawable-watch-v20\\common_google_signin_btn_text_dark_normal.xml",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\859a4d5c86402f34d10a0b501b787f41\\transformed\\jetified-play-services-auth-17.0.0\\res\\drawable-watch-v20\\common_google_signin_btn_text_dark_normal.xml"
+    }
+]

@@ -1,0 +1,682 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.spendzz_customer"
+4    android:versionCode="4002"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="30" />
+9-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:3:5-67
+11-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:3:22-64
+12    <uses-permission android:name="android.permission.READ_CONTACTS" />
+12-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:4:5-71
+12-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:4:22-69
+13    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+13-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:5:5-72
+13-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:5:22-70
+14    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+14-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:6:5-70
+14-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:6:22-68
+15    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+15-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:7:5-79
+15-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:7:22-76
+16    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+16-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:8:5-81
+16-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:8:22-78
+17
+18    <queries>
+18-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:54:5-60:15
+19
+20        <!-- If your app opens https URLs -->
+21        <intent>
+21-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:56:9-59:18
+22            <action android:name="android.intent.action.VIEW" />
+22-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:57:13-65
+22-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:57:21-62
+23
+24            <data android:scheme="https" />
+24-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:13-44
+24-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:19-41
+25        </intent>
+26        <intent>
+26-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:12:9-18:18
+27            <action android:name="android.intent.action.VIEW" />
+27-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:57:13-65
+27-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:57:21-62
+28
+29            <data
+29-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:13-44
+30                android:mimeType="*/*"
+31                android:scheme="*" />
+31-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:19-41
+32        </intent>
+33        <intent>
+33-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:19:9-28:18
+34            <action android:name="android.intent.action.VIEW" />
+34-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:57:13-65
+34-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:57:21-62
+35
+36            <category android:name="android.intent.category.BROWSABLE" />
+36-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:22:13-74
+36-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:22:23-71
+37
+38            <data
+38-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:13-44
+39                android:host="pay"
+40                android:mimeType="*/*"
+41                android:scheme="upi" />
+41-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:19-41
+42        </intent>
+43        <intent>
+43-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:29:9-31:18
+44            <action android:name="android.intent.action.MAIN" />
+44-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:36:17-68
+44-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:36:25-66
+45        </intent>
+46        <intent>
+46-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:32:9-36:18
+47            <action android:name="android.intent.action.SEND" />
+47-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:33:13-65
+47-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:33:21-62
+48
+49            <data android:mimeType="*/*" />
+49-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:13-44
+50        </intent>
+51    </queries>
+52
+53    <uses-permission android:name="android.permission.WAKE_LOCK" />
+53-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:8:5-68
+53-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:8:22-65
+54    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+54-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:9:5-79
+54-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:9:22-76
+55    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+55-->[:geolocator_android] C:\alphonic\customerbackup\spendzz\spendzz\build\geolocator_android\intermediates\merged_manifest\release\AndroidManifest.xml:7:5-77
+55-->[:geolocator_android] C:\alphonic\customerbackup\spendzz\spendzz\build\geolocator_android\intermediates\merged_manifest\release\AndroidManifest.xml:7:22-74
+56    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+56-->[:image_crop] C:\alphonic\customerbackup\spendzz\spendzz\build\image_crop\intermediates\merged_manifest\release\AndroidManifest.xml:7:5-80
+56-->[:image_crop] C:\alphonic\customerbackup\spendzz\spendzz\build\image_crop\intermediates\merged_manifest\release\AndroidManifest.xml:7:22-77
+57    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+57-->[:image_crop] C:\alphonic\customerbackup\spendzz\spendzz\build\image_crop\intermediates\merged_manifest\release\AndroidManifest.xml:8:5-81
+57-->[:image_crop] C:\alphonic\customerbackup\spendzz\spendzz\build\image_crop\intermediates\merged_manifest\release\AndroidManifest.xml:8:22-78
+58    <uses-permission android:name="android.permission.CAMERA" />
+58-->[:camera] C:\alphonic\customerbackup\spendzz\spendzz\build\camera\intermediates\merged_manifest\release\AndroidManifest.xml:9:5-65
+58-->[:camera] C:\alphonic\customerbackup\spendzz\spendzz\build\camera\intermediates\merged_manifest\release\AndroidManifest.xml:9:22-62
+59    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+59-->[:camera] C:\alphonic\customerbackup\spendzz\spendzz\build\camera\intermediates\merged_manifest\release\AndroidManifest.xml:10:5-71
+59-->[:camera] C:\alphonic\customerbackup\spendzz\spendzz\build\camera\intermediates\merged_manifest\release\AndroidManifest.xml:10:22-68
+60    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+60-->[:open_file] C:\alphonic\customerbackup\spendzz\spendzz\build\open_file\intermediates\merged_manifest\release\AndroidManifest.xml:8:5-83
+60-->[:open_file] C:\alphonic\customerbackup\spendzz\spendzz\build\open_file\intermediates\merged_manifest\release\AndroidManifest.xml:8:22-80
+61    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+61-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:28:5-82
+61-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:28:22-79
+62    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+62-->[com.google.android.gms:play-services-measurement-api:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\d5198436c46799edb976c05ba97bf910\transformed\jetified-play-services-measurement-api-20.1.2\AndroidManifest.xml:25:5-79
+62-->[com.google.android.gms:play-services-measurement-api:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\d5198436c46799edb976c05ba97bf910\transformed\jetified-play-services-measurement-api-20.1.2\AndroidManifest.xml:25:22-76
+63    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+63-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:26:5-110
+63-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:26:22-107
+64
+65    <uses-feature
+65-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\e2b862f2d4e747c96b35877eb5e09a88\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:26:5-28:35
+66        android:glEsVersion="0x00020000"
+66-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\e2b862f2d4e747c96b35877eb5e09a88\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:27:9-41
+67        android:required="true" /> <!-- Don't require camera, as this requires a rear camera. This allows it to work on the Nexus 7 -->
+67-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\e2b862f2d4e747c96b35877eb5e09a88\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:28:9-32
+68    <uses-feature
+68-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:25:5-27:36
+69        android:name="android.hardware.camera"
+69-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:26:9-47
+70        android:required="false" />
+70-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:27:9-33
+71    <uses-feature
+71-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:28:5-30:36
+72        android:name="android.hardware.camera.front"
+72-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:29:9-53
+73        android:required="false" /> <!-- TODO replace above two with next line after Android 4.2 -->
+73-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:30:9-33
+74    <!-- <uses-feature android:name="android.hardware.camera.any"/> -->
+75    <uses-feature
+75-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:33:5-35:36
+76        android:name="android.hardware.camera.autofocus"
+76-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:34:9-57
+77        android:required="false" />
+77-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:35:9-33
+78    <uses-feature
+78-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:36:5-38:36
+79        android:name="android.hardware.camera.flash"
+79-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:37:9-53
+80        android:required="false" />
+80-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:38:9-33
+81    <uses-feature
+81-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:39:5-41:36
+82        android:name="android.hardware.screen.landscape"
+82-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:40:9-57
+83        android:required="false" />
+83-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:41:9-33
+84    <uses-feature
+84-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:42:5-44:36
+85        android:name="android.hardware.wifi"
+85-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:43:9-45
+86        android:required="false" />
+86-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:44:9-33
+87
+88    <application
+88-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:9:4-53:19
+89        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+89-->[androidx.core:core:1.7.0] C:\Users\91978\.gradle\caches\transforms-3\3d1c2a4fb3b0c36a1fb7bc3302610488\transformed\core-1.7.0\AndroidManifest.xml:24:18-86
+90        android:icon="@mipmap/ic_launcher"
+90-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:13:9-43
+91        android:label="spendzz"
+91-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:10:9-32
+92        android:networkSecurityConfig="@xml/network_security_config"
+92-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:11:9-69
+93        android:usesCleartextTraffic="true" >
+93-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:12:9-44
+94        <activity
+94-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:14:9-39:20
+95            android:name="com.spendzz_customer.MainActivity"
+95-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:15:13-41
+96            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+96-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:18:13-163
+97            android:hardwareAccelerated="true"
+97-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:19:13-47
+98            android:launchMode="singleTop"
+98-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:16:13-43
+99            android:theme="@style/LaunchTheme"
+99-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:17:13-47
+100            android:windowSoftInputMode="adjustResize" >
+100-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:20:13-55
+101            android:name="flutterEmbedding"
+102            android:value="2"
+103            <meta-data
+103-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:23:13-25:55
+104                android:name="io.flutter.embedding.android.NormalTheme"
+104-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:24:15-70
+105                android:resource="@style/NormalTheme" />
+105-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:25:15-52
+106            <meta-data
+106-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:26:13-28:64
+107                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+107-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:27:15-79
+108                android:resource="@drawable/launch_background" />
+108-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:28:15-61
+109
+110            <intent-filter>
+110-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:30:13-33:29
+111                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+111-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:31:17-69
+111-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:31:25-66
+112
+113                <category android:name="android.intent.category.DEFAULT" />
+113-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:32:17-76
+113-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:32:27-73
+114            </intent-filter>
+115            <intent-filter>
+115-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:35:13-38:29
+116                <action android:name="android.intent.action.MAIN" />
+116-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:36:17-68
+116-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:36:25-66
+117
+118                <category android:name="android.intent.category.LAUNCHER" />
+118-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:37:17-76
+118-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:37:27-74
+119            </intent-filter>
+120        </activity>
+121
+122        <!--
+123             Don't delete the meta-data below.
+124             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+125        -->
+126        <meta-data
+126-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:46:9-48:33
+127            android:name="flutterEmbedding"
+127-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:47:13-44
+128            android:value="2" />
+128-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:48:13-30
+129
+130        <!--
+131           <meta-data android:name="io.flutter.network-policy"
+132           android:resource="@xml/network_security_config"/>
+133        -->
+134
+135        <service
+135-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:12:9-15:72
+136            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService"
+136-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:13:13-107
+137            android:exported="false"
+137-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:14:13-37
+138            android:permission="android.permission.BIND_JOB_SERVICE" />
+138-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:15:13-69
+139        <service
+139-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:16:9-22:19
+140            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
+140-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:17:13-97
+141            android:exported="false" >
+141-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:18:13-37
+142            <intent-filter>
+142-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:19:13-21:29
+143                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+143-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:20:17-78
+143-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:20:25-75
+144            </intent-filter>
+145        </service>
+146
+147        <receiver
+147-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:24:9-31:20
+148            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver"
+148-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:25:13-98
+149            android:exported="true"
+149-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:26:13-36
+150            android:permission="com.google.android.c2dm.permission.SEND" >
+150-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:27:13-73
+151            <intent-filter>
+151-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:28:13-30:29
+152                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+152-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:29:17-81
+152-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:29:25-78
+153            </intent-filter>
+154        </receiver>
+155
+156        <service
+156-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:33:9-37:19
+157            android:name="com.google.firebase.components.ComponentDiscoveryService"
+157-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:33:18-89
+158            android:directBootAware="true"
+158-->[com.google.firebase:firebase-common:20.1.0] C:\Users\91978\.gradle\caches\transforms-3\9ee30dd87d1b13c19b04c06979774c3f\transformed\jetified-firebase-common-20.1.0\AndroidManifest.xml:35:13-43
+159            android:exported="false" >
+159-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:54:13-37
+160            <meta-data
+160-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:34:13-36:85
+161                android:name="com.google.firebase.components:io.flutter.plugins.firebase.messaging.FlutterFirebaseAppRegistrar"
+161-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:35:17-128
+162                android:value="com.google.firebase.components.ComponentRegistrar" />
+162-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:36:17-82
+163            <meta-data
+163-->[:firebase_analytics] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_analytics\intermediates\merged_manifest\release\AndroidManifest.xml:13:13-15:85
+164                android:name="com.google.firebase.components:io.flutter.plugins.firebaseanalytics.FlutterFirebaseAppRegistrar"
+164-->[:firebase_analytics] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_analytics\intermediates\merged_manifest\release\AndroidManifest.xml:14:17-127
+165                android:value="com.google.firebase.components.ComponentRegistrar" />
+165-->[:firebase_analytics] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_analytics\intermediates\merged_manifest\release\AndroidManifest.xml:15:17-82
+166            <meta-data
+166-->[:firebase_core] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_core\intermediates\merged_manifest\release\AndroidManifest.xml:9:13-11:85
+167                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"
+167-->[:firebase_core] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_core\intermediates\merged_manifest\release\AndroidManifest.xml:10:17-124
+168                android:value="com.google.firebase.components.ComponentRegistrar" />
+168-->[:firebase_core] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_core\intermediates\merged_manifest\release\AndroidManifest.xml:11:17-82
+169            <meta-data
+169-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:55:13-57:85
+170                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+170-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:56:17-119
+171                android:value="com.google.firebase.components.ComponentRegistrar" />
+171-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:57:17-82
+172            <meta-data
+172-->[com.google.android.gms:play-services-measurement-api:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\d5198436c46799edb976c05ba97bf910\transformed\jetified-play-services-measurement-api-20.1.2\AndroidManifest.xml:31:13-33:85
+173                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+173-->[com.google.android.gms:play-services-measurement-api:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\d5198436c46799edb976c05ba97bf910\transformed\jetified-play-services-measurement-api-20.1.2\AndroidManifest.xml:32:17-139
+174                android:value="com.google.firebase.components.ComponentRegistrar" />
+174-->[com.google.android.gms:play-services-measurement-api:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\d5198436c46799edb976c05ba97bf910\transformed\jetified-play-services-measurement-api-20.1.2\AndroidManifest.xml:33:17-82
+175            <meta-data
+175-->[com.google.firebase:firebase-datatransport:18.1.2] C:\Users\91978\.gradle\caches\transforms-3\c1e8ba3c9b93ebbb80e6ae744b77c4e7\transformed\jetified-firebase-datatransport-18.1.2\AndroidManifest.xml:28:13-30:85
+176                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+176-->[com.google.firebase:firebase-datatransport:18.1.2] C:\Users\91978\.gradle\caches\transforms-3\c1e8ba3c9b93ebbb80e6ae744b77c4e7\transformed\jetified-firebase-datatransport-18.1.2\AndroidManifest.xml:29:17-115
+177                android:value="com.google.firebase.components.ComponentRegistrar" />
+177-->[com.google.firebase:firebase-datatransport:18.1.2] C:\Users\91978\.gradle\caches\transforms-3\c1e8ba3c9b93ebbb80e6ae744b77c4e7\transformed\jetified-firebase-datatransport-18.1.2\AndroidManifest.xml:30:17-82
+178            <meta-data
+178-->[com.google.firebase:firebase-installations:17.0.1] C:\Users\91978\.gradle\caches\transforms-3\14ffefa1b3df3b267b8071b59551297f\transformed\jetified-firebase-installations-17.0.1\AndroidManifest.xml:18:13-20:85
+179                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+179-->[com.google.firebase:firebase-installations:17.0.1] C:\Users\91978\.gradle\caches\transforms-3\14ffefa1b3df3b267b8071b59551297f\transformed\jetified-firebase-installations-17.0.1\AndroidManifest.xml:19:17-127
+180                android:value="com.google.firebase.components.ComponentRegistrar" />
+180-->[com.google.firebase:firebase-installations:17.0.1] C:\Users\91978\.gradle\caches\transforms-3\14ffefa1b3df3b267b8071b59551297f\transformed\jetified-firebase-installations-17.0.1\AndroidManifest.xml:20:17-82
+181        </service>
+182
+183        <provider
+183-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:39:9-43:38
+184            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider"
+184-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:40:13-102
+185            android:authorities="com.spendzz_customer.flutterfirebasemessaginginitprovider"
+185-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:41:13-88
+186            android:exported="false"
+186-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:42:13-37
+187            android:initOrder="99" />
+187-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:43:13-35
+188
+189        <service
+189-->[:geolocator_android] C:\alphonic\customerbackup\spendzz\spendzz\build\geolocator_android\intermediates\merged_manifest\release\AndroidManifest.xml:10:9-14:56
+190            android:name="com.baseflow.geolocator.GeolocatorLocationService"
+190-->[:geolocator_android] C:\alphonic\customerbackup\spendzz\spendzz\build\geolocator_android\intermediates\merged_manifest\release\AndroidManifest.xml:11:13-77
+191            android:enabled="true"
+191-->[:geolocator_android] C:\alphonic\customerbackup\spendzz\spendzz\build\geolocator_android\intermediates\merged_manifest\release\AndroidManifest.xml:12:13-35
+192            android:exported="false"
+192-->[:geolocator_android] C:\alphonic\customerbackup\spendzz\spendzz\build\geolocator_android\intermediates\merged_manifest\release\AndroidManifest.xml:13:13-37
+193            android:foregroundServiceType="location" />
+193-->[:geolocator_android] C:\alphonic\customerbackup\spendzz\spendzz\build\geolocator_android\intermediates\merged_manifest\release\AndroidManifest.xml:14:13-53
+194
+195        <provider
+195-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:8:9-16:20
+196            android:name="io.flutter.plugins.share.ShareFileProvider"
+196-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:9:13-70
+197            android:authorities="com.spendzz_customer.flutter.share_provider"
+197-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:10:13-74
+198            android:exported="false"
+198-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:11:13-37
+199            android:grantUriPermissions="true" >
+199-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:12:13-47
+200            <meta-data
+200-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:13:13-15:68
+201                android:name="android.support.FILE_PROVIDER_PATHS"
+201-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:14:17-67
+202                android:resource="@xml/flutter_share_file_paths" />
+202-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:15:17-65
+203        </provider>
+204        <provider
+204-->[:image_picker_android] C:\alphonic\customerbackup\spendzz\spendzz\build\image_picker_android\intermediates\merged_manifest\release\AndroidManifest.xml:8:9-16:20
+205            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+205-->[:image_picker_android] C:\alphonic\customerbackup\spendzz\spendzz\build\image_picker_android\intermediates\merged_manifest\release\AndroidManifest.xml:9:13-82
+206            android:authorities="com.spendzz_customer.flutter.image_provider"
+206-->[:image_picker_android] C:\alphonic\customerbackup\spendzz\spendzz\build\image_picker_android\intermediates\merged_manifest\release\AndroidManifest.xml:10:13-74
+207            android:exported="false"
+207-->[:image_picker_android] C:\alphonic\customerbackup\spendzz\spendzz\build\image_picker_android\intermediates\merged_manifest\release\AndroidManifest.xml:11:13-37
+208            android:grantUriPermissions="true" >
+208-->[:image_picker_android] C:\alphonic\customerbackup\spendzz\spendzz\build\image_picker_android\intermediates\merged_manifest\release\AndroidManifest.xml:12:13-47
+209            <meta-data
+209-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:13:13-15:68
+210                android:name="android.support.FILE_PROVIDER_PATHS"
+210-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:14:17-67
+211                android:resource="@xml/flutter_image_picker_file_paths" />
+211-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:15:17-65
+212        </provider>
+213
+214        <activity
+214-->[:url_launcher_android] C:\alphonic\customerbackup\spendzz\spendzz\build\url_launcher_android\intermediates\merged_manifest\release\AndroidManifest.xml:8:9-11:74
+215            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+215-->[:url_launcher_android] C:\alphonic\customerbackup\spendzz\spendzz\build\url_launcher_android\intermediates\merged_manifest\release\AndroidManifest.xml:9:13-74
+216            android:exported="false"
+216-->[:url_launcher_android] C:\alphonic\customerbackup\spendzz\spendzz\build\url_launcher_android\intermediates\merged_manifest\release\AndroidManifest.xml:10:13-37
+217            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+217-->[:url_launcher_android] C:\alphonic\customerbackup\spendzz\spendzz\build\url_launcher_android\intermediates\merged_manifest\release\AndroidManifest.xml:11:13-71
+218
+219        <provider
+219-->[:open_file] C:\alphonic\customerbackup\spendzz\spendzz\build\open_file\intermediates\merged_manifest\release\AndroidManifest.xml:12:9-21:20
+220            android:name="com.crazecoder.openfile.FileProvider"
+220-->[:open_file] C:\alphonic\customerbackup\spendzz\spendzz\build\open_file\intermediates\merged_manifest\release\AndroidManifest.xml:13:13-64
+221            android:authorities="com.spendzz_customer.fileProvider.com.crazecoder.openfile"
+221-->[:open_file] C:\alphonic\customerbackup\spendzz\spendzz\build\open_file\intermediates\merged_manifest\release\AndroidManifest.xml:14:13-88
+222            android:exported="false"
+222-->[:open_file] C:\alphonic\customerbackup\spendzz\spendzz\build\open_file\intermediates\merged_manifest\release\AndroidManifest.xml:15:13-37
+223            android:grantUriPermissions="true" >
+223-->[:open_file] C:\alphonic\customerbackup\spendzz\spendzz\build\open_file\intermediates\merged_manifest\release\AndroidManifest.xml:16:13-47
+224            <meta-data
+224-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:13:13-15:68
+225                android:name="android.support.FILE_PROVIDER_PATHS"
+225-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:14:17-67
+226                android:resource="@xml/filepaths" />
+226-->[:share] C:\alphonic\customerbackup\spendzz\spendzz\build\share\intermediates\merged_manifest\release\AndroidManifest.xml:15:17-65
+227        </provider>
+228
+229        <service
+229-->[:location] C:\alphonic\customerbackup\spendzz\spendzz\build\location\intermediates\merged_manifest\release\AndroidManifest.xml:11:9-15:56
+230            android:name="com.lyokone.location.FlutterLocationService"
+230-->[:location] C:\alphonic\customerbackup\spendzz\spendzz\build\location\intermediates\merged_manifest\release\AndroidManifest.xml:12:13-71
+231            android:enabled="true"
+231-->[:location] C:\alphonic\customerbackup\spendzz\spendzz\build\location\intermediates\merged_manifest\release\AndroidManifest.xml:13:13-35
+232            android:exported="false"
+232-->[:location] C:\alphonic\customerbackup\spendzz\spendzz\build\location\intermediates\merged_manifest\release\AndroidManifest.xml:14:13-37
+233            android:foregroundServiceType="location" />
+233-->[:location] C:\alphonic\customerbackup\spendzz\spendzz\build\location\intermediates\merged_manifest\release\AndroidManifest.xml:15:13-53
+234
+235        <uses-library
+235-->[androidx.window:window:1.0.0-beta04] C:\Users\91978\.gradle\caches\transforms-3\7ad38a5271959b319c03e397479a6f46\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:25:9-27:40
+236            android:name="androidx.window.extensions"
+236-->[androidx.window:window:1.0.0-beta04] C:\Users\91978\.gradle\caches\transforms-3\7ad38a5271959b319c03e397479a6f46\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:26:13-54
+237            android:required="false" />
+237-->[androidx.window:window:1.0.0-beta04] C:\Users\91978\.gradle\caches\transforms-3\7ad38a5271959b319c03e397479a6f46\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:27:13-37
+238        <uses-library
+238-->[androidx.window:window:1.0.0-beta04] C:\Users\91978\.gradle\caches\transforms-3\7ad38a5271959b319c03e397479a6f46\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:28:9-30:40
+239            android:name="androidx.window.sidecar"
+239-->[androidx.window:window:1.0.0-beta04] C:\Users\91978\.gradle\caches\transforms-3\7ad38a5271959b319c03e397479a6f46\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:29:13-51
+240            android:required="false" />
+240-->[androidx.window:window:1.0.0-beta04] C:\Users\91978\.gradle\caches\transforms-3\7ad38a5271959b319c03e397479a6f46\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:30:13-37
+241
+242        <receiver
+242-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:31:9-38:20
+243            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+243-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:32:13-78
+244            android:exported="true"
+244-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:33:13-36
+245            android:permission="com.google.android.c2dm.permission.SEND" >
+245-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:34:13-73
+246            <intent-filter>
+246-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:28:13-30:29
+247                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+247-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:29:17-81
+247-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:29:25-78
+248            </intent-filter>
+249        </receiver>
+250        <!--
+251             FirebaseMessagingService performs security checks at runtime,
+252             but set to not exported to explicitly avoid allowing another app to call it.
+253        -->
+254        <service
+254-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:44:9-51:19
+255            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+255-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:45:13-82
+256            android:directBootAware="true"
+256-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:46:13-43
+257            android:exported="false" >
+257-->[com.google.firebase:firebase-messaging:23.0.3] C:\Users\91978\.gradle\caches\transforms-3\56797dcf55217c188669f1d638ebd9e8\transformed\jetified-firebase-messaging-23.0.3\AndroidManifest.xml:47:13-37
+258            <intent-filter android:priority="-500" >
+258-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:19:13-21:29
+259                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+259-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:20:17-78
+259-->[:firebase_messaging] C:\alphonic\customerbackup\spendzz\spendzz\build\firebase_messaging\intermediates\merged_manifest\release\AndroidManifest.xml:20:25-75
+260            </intent-filter>
+261        </service>
+262
+263        <provider
+263-->[com.google.firebase:firebase-common:20.1.0] C:\Users\91978\.gradle\caches\transforms-3\9ee30dd87d1b13c19b04c06979774c3f\transformed\jetified-firebase-common-20.1.0\AndroidManifest.xml:26:9-31:39
+264            android:name="com.google.firebase.provider.FirebaseInitProvider"
+264-->[com.google.firebase:firebase-common:20.1.0] C:\Users\91978\.gradle\caches\transforms-3\9ee30dd87d1b13c19b04c06979774c3f\transformed\jetified-firebase-common-20.1.0\AndroidManifest.xml:27:13-77
+265            android:authorities="com.spendzz_customer.firebaseinitprovider"
+265-->[com.google.firebase:firebase-common:20.1.0] C:\Users\91978\.gradle\caches\transforms-3\9ee30dd87d1b13c19b04c06979774c3f\transformed\jetified-firebase-common-20.1.0\AndroidManifest.xml:28:13-72
+266            android:directBootAware="true"
+266-->[com.google.firebase:firebase-common:20.1.0] C:\Users\91978\.gradle\caches\transforms-3\9ee30dd87d1b13c19b04c06979774c3f\transformed\jetified-firebase-common-20.1.0\AndroidManifest.xml:29:13-43
+267            android:exported="false"
+267-->[com.google.firebase:firebase-common:20.1.0] C:\Users\91978\.gradle\caches\transforms-3\9ee30dd87d1b13c19b04c06979774c3f\transformed\jetified-firebase-common-20.1.0\AndroidManifest.xml:30:13-37
+268            android:initOrder="100" />
+268-->[com.google.firebase:firebase-common:20.1.0] C:\Users\91978\.gradle\caches\transforms-3\9ee30dd87d1b13c19b04c06979774c3f\transformed\jetified-firebase-common-20.1.0\AndroidManifest.xml:31:13-36
+269
+270        <receiver
+270-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:29:9-33:20
+271            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+271-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:30:13-85
+272            android:enabled="true"
+272-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:31:13-35
+273            android:exported="false" >
+273-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:32:13-37
+274        </receiver>
+275
+276        <service
+276-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:35:9-38:40
+277            android:name="com.google.android.gms.measurement.AppMeasurementService"
+277-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:36:13-84
+278            android:enabled="true"
+278-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:37:13-35
+279            android:exported="false" />
+279-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:38:13-37
+280        <service
+280-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:39:9-43:72
+281            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+281-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:40:13-87
+282            android:enabled="true"
+282-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:41:13-35
+283            android:exported="false"
+283-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:42:13-37
+284            android:permission="android.permission.BIND_JOB_SERVICE" />
+284-->[com.google.android.gms:play-services-measurement:20.1.2] C:\Users\91978\.gradle\caches\transforms-3\514d7aaaa34c118d513b41151093b759\transformed\jetified-play-services-measurement-20.1.2\AndroidManifest.xml:43:13-69
+285
+286        <receiver
+286-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:40:9-46:20
+287            android:name="com.razorpay.RzpTokenReceiver"
+287-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:41:13-57
+288            android:exported="false" >
+288-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:42:13-37
+289            <intent-filter>
+289-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:43:13-45:29
+290                <action android:name="rzp.device_token.share" />
+290-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:44:17-65
+290-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:44:25-62
+291            </intent-filter>
+292        </receiver>
+293
+294        <activity
+294-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:48:9-60:20
+295            android:name="com.razorpay.CheckoutActivity"
+295-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:49:13-57
+296            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+296-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:50:13-83
+297            android:exported="true"
+297-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:51:13-36
+298            android:theme="@style/CheckoutTheme" >
+298-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:52:13-49
+299            <intent-filter>
+299-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:53:13-59:29
+300                <action android:name="android.intent.action.MAIN" />
+300-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:36:17-68
+300-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:36:25-66
+301
+302                <data
+302-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:13-44
+303                    android:host="rzp.io"
+304                    android:scheme="io.rzp" />
+304-->C:\alphonic\customerbackup\spendzz\spendzz\android\app\src\main\AndroidManifest.xml:58:19-41
+305            </intent-filter>
+306        </activity>
+307
+308        <meta-data
+308-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:62:9-64:58
+309            android:name="com.razorpay.plugin.googlepay_all"
+309-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:63:13-61
+310            android:value="com.razorpay.RzpGpayMerged" />
+310-->[com.razorpay:checkout:1.6.19] C:\Users\91978\.gradle\caches\transforms-3\9d11eaa82f62573db304a09c9773d939\transformed\jetified-checkout-1.6.19\AndroidManifest.xml:64:13-55
+311
+312        <activity
+312-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:23:9-27:75
+313            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+313-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:24:13-93
+314            android:excludeFromRecents="true"
+314-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:25:13-46
+315            android:exported="false"
+315-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:26:13-37
+316            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+316-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:27:13-72
+317        <!--
+318            Service handling Google Sign-In user revocation. For apps that do not integrate with
+319            Google Sign-In, this service will never be started.
+320        -->
+321        <service
+321-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:33:9-36:110
+322            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+322-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:34:13-89
+323            android:exported="true"
+323-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:35:13-36
+324            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" /> <!-- Needs to be explicitly declared on P+ -->
+324-->[com.google.android.gms:play-services-auth:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\859a4d5c86402f34d10a0b501b787f41\transformed\jetified-play-services-auth-17.0.0\AndroidManifest.xml:36:13-107
+325        <uses-library
+325-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\e2b862f2d4e747c96b35877eb5e09a88\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:33:9-35:40
+326            android:name="org.apache.http.legacy"
+326-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\e2b862f2d4e747c96b35877eb5e09a88\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:34:13-50
+327            android:required="false" />
+327-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\91978\.gradle\caches\transforms-3\e2b862f2d4e747c96b35877eb5e09a88\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:35:13-37
+328
+329        <activity
+329-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\91978\.gradle\caches\transforms-3\7012574d01bb1756f38c9490f7da9b8c\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+330            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+330-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\91978\.gradle\caches\transforms-3\7012574d01bb1756f38c9490f7da9b8c\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+331            android:exported="false"
+331-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\91978\.gradle\caches\transforms-3\7012574d01bb1756f38c9490f7da9b8c\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+332            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+332-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\91978\.gradle\caches\transforms-3\7012574d01bb1756f38c9490f7da9b8c\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+333
+334        <meta-data
+334-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\91978\.gradle\caches\transforms-3\a7e2df9183821c13591ce40aec8f7338\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:21:9-23:69
+335            android:name="com.google.android.gms.version"
+335-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\91978\.gradle\caches\transforms-3\a7e2df9183821c13591ce40aec8f7338\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:22:13-58
+336            android:value="@integer/google_play_services_version" />
+336-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\91978\.gradle\caches\transforms-3\a7e2df9183821c13591ce40aec8f7338\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:23:13-66
+337
+338        <provider
+338-->[androidx.emoji2:emoji2:1.0.0] C:\Users\91978\.gradle\caches\transforms-3\e3d359cd8eaa44e5d06c24ad2aef17f5\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:26:9-34:20
+339            android:name="androidx.startup.InitializationProvider"
+339-->[androidx.emoji2:emoji2:1.0.0] C:\Users\91978\.gradle\caches\transforms-3\e3d359cd8eaa44e5d06c24ad2aef17f5\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:27:13-67
+340            android:authorities="com.spendzz_customer.androidx-startup"
+340-->[androidx.emoji2:emoji2:1.0.0] C:\Users\91978\.gradle\caches\transforms-3\e3d359cd8eaa44e5d06c24ad2aef17f5\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:28:13-68
+341            android:exported="false" >
+341-->[androidx.emoji2:emoji2:1.0.0] C:\Users\91978\.gradle\caches\transforms-3\e3d359cd8eaa44e5d06c24ad2aef17f5\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:29:13-37
+342            <meta-data
+342-->[androidx.emoji2:emoji2:1.0.0] C:\Users\91978\.gradle\caches\transforms-3\e3d359cd8eaa44e5d06c24ad2aef17f5\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:31:13-33:52
+343                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+343-->[androidx.emoji2:emoji2:1.0.0] C:\Users\91978\.gradle\caches\transforms-3\e3d359cd8eaa44e5d06c24ad2aef17f5\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:32:17-75
+344                android:value="androidx.startup" />
+344-->[androidx.emoji2:emoji2:1.0.0] C:\Users\91978\.gradle\caches\transforms-3\e3d359cd8eaa44e5d06c24ad2aef17f5\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:33:17-49
+345            <meta-data
+345-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\91978\.gradle\caches\transforms-3\c223146eaaaa9bce6d31f08ae29c848f\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:31:13-33:52
+346                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+346-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\91978\.gradle\caches\transforms-3\c223146eaaaa9bce6d31f08ae29c848f\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:32:17-78
+347                android:value="androidx.startup" />
+347-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\91978\.gradle\caches\transforms-3\c223146eaaaa9bce6d31f08ae29c848f\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:33:17-49
+348        </provider>
+349
+350        <service
+350-->[com.google.android.datatransport:transport-backend-cct:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\c5dee54d386a530158762a517fcc315c\transformed\jetified-transport-backend-cct-3.1.3\AndroidManifest.xml:29:9-35:19
+351            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+351-->[com.google.android.datatransport:transport-backend-cct:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\c5dee54d386a530158762a517fcc315c\transformed\jetified-transport-backend-cct-3.1.3\AndroidManifest.xml:30:13-103
+352            android:exported="false" >
+352-->[com.google.android.datatransport:transport-backend-cct:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\c5dee54d386a530158762a517fcc315c\transformed\jetified-transport-backend-cct-3.1.3\AndroidManifest.xml:31:13-37
+353            <meta-data
+353-->[com.google.android.datatransport:transport-backend-cct:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\c5dee54d386a530158762a517fcc315c\transformed\jetified-transport-backend-cct-3.1.3\AndroidManifest.xml:32:13-34:39
+354                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+354-->[com.google.android.datatransport:transport-backend-cct:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\c5dee54d386a530158762a517fcc315c\transformed\jetified-transport-backend-cct-3.1.3\AndroidManifest.xml:33:17-94
+355                android:value="cct" />
+355-->[com.google.android.datatransport:transport-backend-cct:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\c5dee54d386a530158762a517fcc315c\transformed\jetified-transport-backend-cct-3.1.3\AndroidManifest.xml:34:17-36
+356        </service>
+357        <service
+357-->[com.google.android.datatransport:transport-runtime:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\f377fdb7d80eff87816dbb8b40d48c15\transformed\jetified-transport-runtime-3.1.3\AndroidManifest.xml:26:9-30:19
+358            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+358-->[com.google.android.datatransport:transport-runtime:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\f377fdb7d80eff87816dbb8b40d48c15\transformed\jetified-transport-runtime-3.1.3\AndroidManifest.xml:27:13-117
+359            android:exported="false"
+359-->[com.google.android.datatransport:transport-runtime:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\f377fdb7d80eff87816dbb8b40d48c15\transformed\jetified-transport-runtime-3.1.3\AndroidManifest.xml:28:13-37
+360            android:permission="android.permission.BIND_JOB_SERVICE" >
+360-->[com.google.android.datatransport:transport-runtime:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\f377fdb7d80eff87816dbb8b40d48c15\transformed\jetified-transport-runtime-3.1.3\AndroidManifest.xml:29:13-69
+361        </service>
+362
+363        <receiver
+363-->[com.google.android.datatransport:transport-runtime:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\f377fdb7d80eff87816dbb8b40d48c15\transformed\jetified-transport-runtime-3.1.3\AndroidManifest.xml:32:9-34:40
+364            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+364-->[com.google.android.datatransport:transport-runtime:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\f377fdb7d80eff87816dbb8b40d48c15\transformed\jetified-transport-runtime-3.1.3\AndroidManifest.xml:33:13-132
+365            android:exported="false" />
+365-->[com.google.android.datatransport:transport-runtime:3.1.3] C:\Users\91978\.gradle\caches\transforms-3\f377fdb7d80eff87816dbb8b40d48c15\transformed\jetified-transport-runtime-3.1.3\AndroidManifest.xml:34:13-37
+366
+367        <activity
+367-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:47:9-53:63
+368            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+368-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:48:13-74
+369            android:clearTaskOnLaunch="true"
+369-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:49:13-45
+370            android:screenOrientation="sensorLandscape"
+370-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:50:13-56
+371            android:stateNotNeeded="true"
+371-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:51:13-42
+372            android:theme="@style/zxing_CaptureTheme"
+372-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:52:13-54
+373            android:windowSoftInputMode="stateAlwaysHidden" />
+373-->[com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\91978\.gradle\caches\transforms-3\6d75a57e7561497a9b71e1a1793c682c\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:53:13-60
+374    </application>
+375
+376</manifest>

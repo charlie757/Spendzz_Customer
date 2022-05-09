@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\fluttertoast\\intermediates\\res\\merged\\release\\drawable\\corner.xml",
+        "source": "C:\\Users\\91978\\Downloads\\flutter_windows_2.10.3-stable\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\fluttertoast-8.0.9\\android\\src\\main\\res\\drawable\\corner.xml"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\fluttertoast\\intermediates\\res\\merged\\release\\drawable\\notification_bg.xml",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable\\notification_bg.xml"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\fluttertoast\\intermediates\\res\\merged\\release\\drawable\\toast_bg.xml",
+        "source": "C:\\Users\\91978\\Downloads\\flutter_windows_2.10.3-stable\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\fluttertoast-8.0.9\\android\\src\\main\\res\\drawable\\toast_bg.xml"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\fluttertoast\\intermediates\\res\\merged\\release\\drawable\\notification_icon_background.xml",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable\\notification_icon_background.xml"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\fluttertoast\\intermediates\\res\\merged\\release\\drawable\\notification_bg_low.xml",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable\\notification_bg_low.xml"
+    },
+    {
+        "merged": "C:\\alphonic\\customerbackup\\spendzz\\spendzz\\build\\fluttertoast\\intermediates\\res\\merged\\release\\drawable\\notification_tile_bg.xml",
+        "source": "C:\\Users\\91978\\.gradle\\caches\\transforms-3\\c93b5e48a8b9b80b27e7cded18b3e6e5\\transformed\\core-1.6.0\\res\\drawable\\notification_tile_bg.xml"
+    }
+]

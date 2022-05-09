@@ -7,9 +7,9 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spendzz/resources/constants.dart';
-import 'package:spendzz/screens/account_screens/help_screens/normal_ticket/normal_help_screen.dart';
+import 'package:spendzz/screens/account_screens/help_screens/normal_ticket/all_help_ticket_screen.dart';
 import 'package:spendzz/screens/dashboard_screens/dashboard_main_screen.dart';
-import 'package:spendzz/screens/dashboard_screens/payment_screens/passbook_screen.dart';
+import 'package:spendzz/screens/dashboard_screens/payment_screens/trancations_details_screens/passbook_screen.dart';
 class AddMoneyHistory extends StatefulWidget {
   const AddMoneyHistory({Key? key}) : super(key: key);
 
@@ -21,7 +21,7 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory> {
   late int amount;
   late String transaction_id;
   late String pay_on;
-  late String mobile;
+  late String mobile='';
 
   /*@override
   initState()  {
@@ -158,7 +158,7 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory> {
                   padding: EdgeInsets.only(left: 25),
                   child: Column(
                     children: [
-                      SizedBox(height: 20,),
+                     /* SizedBox(height: 20,),
                       Align(
                         alignment: FractionalOffset.topLeft,
                         child: Text(
@@ -176,7 +176,7 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory> {
                       Align(
                         alignment: FractionalOffset.topLeft,
                         child: Text(
-                          transaction_id.toString(),
+                          *//*transaction_id.toString()*//*"",
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontWeight: FontWeight.w400,
@@ -186,6 +186,7 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 25,),*/
                       SizedBox(height: 25,),
                       Align(
                         alignment: FractionalOffset.topLeft,
@@ -200,7 +201,7 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(height: 6,),
                       Align(
                         alignment: FractionalOffset.topLeft,
                         child: Text(
@@ -250,7 +251,7 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory> {
               child: FlatButton(
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) =>NormalHelpScreen('')));
+                      context, MaterialPageRoute(builder: (context) =>AllHelpTicket('')));
                 },
                 child: Text(
                   'Need Help?',

@@ -186,6 +186,7 @@ class _AddReviewState extends State<AddReview> {
                       ),
                     ),
                     onPressed: () {
+
                       if(addRating=='')
                         {
                           EasyLoading.showToast('Please Add Rating');
@@ -227,9 +228,6 @@ class _AddReviewState extends State<AddReview> {
       ),
     );
   }
-
-
-
   _callAddReviewDataListings() async {
     EasyLoading.show(status: 'loading...');
     var mapBody = new Map<String, dynamic>();
@@ -291,10 +289,9 @@ class _AddReviewState extends State<AddReview> {
       client.close();
     }
   }
-
   void nextScreen() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ReviewAndRating('')));
+        context, MaterialPageRoute(builder: (context) => DashboardMainScreen()));
   }
   void previousScreen() {
     Navigator.push(

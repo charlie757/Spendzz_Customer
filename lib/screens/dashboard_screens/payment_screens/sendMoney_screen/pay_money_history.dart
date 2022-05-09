@@ -6,74 +6,156 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spendzz/api_module/api_config.dart';
 import 'package:spendzz/resources/constants.dart';
-import 'package:spendzz/screens/account_screens/help_screens/normal_ticket/normal_help_screen.dart';
-import 'package:spendzz/screens/account_screens/help_screens/normal_ticket/raise_normal_ticket.dart';
+import 'package:spendzz/screens/account_screens/help_screens/normal_ticket/all_help_ticket_screen.dart';
+import 'package:spendzz/screens/account_screens/help_screens/raise_ticket/raise_normal_ticket.dart';
 import 'package:spendzz/screens/dashboard_screens/dashboard_main_screen.dart';
-import 'package:spendzz/screens/dashboard_screens/payment_screens/passbook_screen.dart';
+import 'package:spendzz/screens/dashboard_screens/payment_screens/trancations_details_screens/passbook_screen.dart';
 import 'package:spendzz/screens/dashboard_screens/payment_screens/sendMoney_screen/pay_money_screen.dart';
+import 'package:http/http.dart' as http;
 class payMoneyHistory extends StatefulWidget {
-  const payMoneyHistory({Key? key}) : super(key: key);
+  var Un_Id='';
+  payMoneyHistory(this.Un_Id);
 
   @override
-  _payMoneyHistoryState createState() => _payMoneyHistoryState();
+  _payMoneyHistoryState createState() => _payMoneyHistoryState(Un_Id);
 }
 
 class _payMoneyHistoryState extends State<payMoneyHistory> {
-  late int total_amount=0;
+  _payMoneyHistoryState(this.Un_Id);
+  var transaction_ID='';
+  var Un_Id='';
+  //late int total_amount=0;
+  late String total_amount='';
   late String transaction_id='';
   late String date='';
   late String debit_from='';
+  late String debit_mobile='';
   late String credit_to='';
   late String credit_mobile='';
-  late String debit_mobile='';
-  late ConfettiController controllerTopCenter;
-  late String un_id='';
+  late String raisedOn='';
   @override
   void initState() {
     setState(() {
 
     });
     super.initState();
-    initController();
     _checkToken();
   }
-  void initController() {
-    controllerTopCenter = ConfettiController(duration: const Duration(seconds: 1));
-  }
+
   _checkToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getInt('total_amount') != null) {
-      total_amount= prefs.getInt('total_amount')!;
-    }
-    if (prefs.getString('transaction_id') != null) {
-      transaction_id=prefs.getString('transaction_id')!;
-    }
-    if (prefs.getString('date') != null) {
-      date=prefs.getString('date')!;
-    }
-    if (prefs.getString('debit_from') != null) {
-      debit_from=prefs.getString('debit_from')!;
-    }
-    if (prefs.getString('credit_to') != null) {
-      credit_to=prefs.getString('credit_to')!;
-    }
-    if (prefs.getString('un_id') != null) {
-      un_id=prefs.getString('un_id')!;
-    }
-
-    if (prefs.getString('credit_mobile') != null) {
-      credit_mobile=prefs.getString('credit_mobile')!;
-    }
-
-    if (prefs.getString('debit_mobile') != null) {
-      debit_mobile=prefs.getString('debit_mobile')!;
-    }
+    _callTicketHistory();
     setState(() {
       //controllerTopCenter.play();
     });
   }
+
+  _callTicketHistory() async {
+    EasyLoading.show(status: 'loading...');
+    var mapBody = new Map<String, dynamic>();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var auth_token = prefs.getString('AUTH_TOKEN') ?? '';
+    mapBody['tid'] = Un_Id.toString();
+
+
+    var client = http.Client();
+    EasyLoading.show(status: 'loading...');
+
+    try {
+      Map<String, String> headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $auth_token',
+      };
+      var uriResponse = await client.post(
+        Uri.parse(ApiConfig.app_base_url + ApiConfig.TRANSACTION_HISTORY_DETAILS),
+        headers: headers,
+        body: mapBody,
+      );
+      var dataAll = json.decode(uriResponse.body);
+      EasyLoading.dismiss();
+      if (uriResponse.statusCode == 200) {
+        if(dataAll['status']==true)
+        {
+
+          total_amount=dataAll["data"]['amount'].toString();
+         // total_amount=dataAll["data"]['un_id'].toString();
+         // date=dataAll["data"]['created_at'].toString();
+          var dateCreated=dataAll["data"]['created_at'].toString();
+          var payTime=dataAll["data"]["pay_time"];
+          var dateTime = dateCreated;
+          var date = dateTime.split('T');
+          var date1 = date[0].trim();
+          var time = dateTime.split('T') + dateTime.split('.');
+          var time1 = time[1].trim();
+          var time2 = time1.split('.');
+          var timeFinal = time2[0].trim();
+          raisedOn = date1 + ", " + payTime;
+
+          if(dataAll["data"]['type']=='Paid')
+          {
+            if(dataAll["data"]['pay_by_type']=='customer')
+              {
+                debit_from=dataAll["data"]['user_details']['name'].toString();
+                debit_mobile=dataAll["data"]['user_details']['mobile'].toString();
+
+                credit_to=dataAll["data"]['customer_info']['name'].toString();
+                credit_mobile=dataAll["data"]['customer_info']['mobile'].toString();
+              }
+            else {
+              debit_from=dataAll["data"]['user_details']['name'].toString();
+              debit_mobile=dataAll["data"]['user_details']['mobile'].toString();
+
+              credit_to=dataAll["data"]['merchant_details']['name'].toString();
+              credit_mobile=dataAll["data"]['merchant_details']['mobile'].toString();
+            }
+
+          }
+          else
+          {
+            credit_to=dataAll["data"]['user_details']['name'].toString();
+            credit_mobile=dataAll["data"]['user_details']['mobile'].toString();
+
+            debit_from=dataAll["data"]['merchant_details']['name'].toString();
+            debit_mobile=dataAll["data"]['merchant_details']['mobile'].toString();
+          }
+
+
+          setState(() {
+
+          });
+        }
+        else
+        {
+          Fluttertoast.showToast(
+              msg: 'error',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+
+      } else {
+        EasyLoading.dismiss();
+        Fluttertoast.showToast(
+            msg: dataAll['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    } finally {
+      client.close();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -81,11 +163,11 @@ class _payMoneyHistoryState extends State<payMoneyHistory> {
         if(Platform.isAndroid)
         {
 
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>PayMoneyScreen("",'')));
+          Navigator.push(context, MaterialPageRoute(builder: (context) =>PassbookScreen()));
         }
         else
         {
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>PayMoneyScreen("",'')));
+          Navigator.push(context, MaterialPageRoute(builder: (context) =>PassbookScreen()));
         }
         //ShowDialog();
         return true;
@@ -93,6 +175,7 @@ class _payMoneyHistoryState extends State<payMoneyHistory> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
+
           scrollDirection: Axis.vertical,
           child: Container(
             height: MediaQuery.of(context).size.height,
@@ -111,8 +194,6 @@ class _payMoneyHistoryState extends State<payMoneyHistory> {
 
                   child: Column(
                     children: [
-                      buildConfettiWidget(controllerTopCenter, pi / 1),
-                      buildConfettiWidget(controllerTopCenter, pi / 4),
                       Container(
                         padding: EdgeInsets.only(top: 85),
                         child: Image.asset('assets/images/check.png',width: 90,
@@ -120,7 +201,7 @@ class _payMoneyHistoryState extends State<payMoneyHistory> {
                             fit:BoxFit.fill  ),
                       ),
                       SizedBox(height: 20,),
-                      Text('\u{20B9}'+total_amount.toString(),
+                      Text('\u{20B9}'+total_amount,
                           style: TextStyle(
                             color: kYellowColor, // <-- Change this
                             fontSize: 25,
@@ -159,7 +240,7 @@ class _payMoneyHistoryState extends State<payMoneyHistory> {
                       Align(
                         alignment: FractionalOffset.center,
                         child: Text(
-                          date.toString(),
+                          raisedOn.toString(),
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontWeight: FontWeight.w300,
@@ -208,7 +289,7 @@ class _payMoneyHistoryState extends State<payMoneyHistory> {
                             ),
                           ),
                         ),
-                        ],
+                      ],
 
                       SizedBox(height: 25,),
                       Align(
@@ -394,7 +475,7 @@ class _payMoneyHistoryState extends State<payMoneyHistory> {
               child: FlatButton(
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) =>Raise_Ticket_Normal(un_id)));
+                      context, MaterialPageRoute(builder: (context) =>Raise_Ticket_Normal(Un_Id)));
                 },
                 child: Text(
                   'Need Help?',

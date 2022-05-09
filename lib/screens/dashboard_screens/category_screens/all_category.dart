@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -159,127 +160,126 @@ class _AllCategoryState extends State<AllCategory> {
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            child: Container(
-              child: ListView.builder(
+          child: Wrap(
+            children: [
+              ListView.builder(
                 shrinkWrap: true,
-                //physics: NeverScrollableScrollPhysics(),
+                physics: NeverScrollableScrollPhysics(),
                 itemCount:allCategoryData.length,
                 //  itemCount: 23,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (ctx, index) {
                   var mdlSubData = allCategoryData[index];
-                return Card(
-                 // color: klightYelloColor,
-                  elevation: 0,
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SingleCategory(mdlSubData.id,mdlSubData.categoryName,type)));
-                    },
-                    child: Container(
+                  return Card(
+                    // color: klightYelloColor,
+                    elevation: 0,
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SingleCategory(mdlSubData.id,mdlSubData.categoryName,type)));
+                      },
                       child: Container(
-                        padding: EdgeInsets.only(right: 0),
-                        child: Card(
-                          color: Colors.white,
-                          elevation: 3,
-                          margin: EdgeInsets.all(0.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                          ),
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 3,top: 2),
-                            child:  Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.all(2.0),
-                                    child: Container(
-                                      padding: EdgeInsets.only(top: 2, left: 25,right: 25),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 68.00,
-                                            height: 68.00,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              //color: Colors.red,
-                                              image: DecorationImage(
-                                                scale: 2,
-                                                image: NetworkImage(
-                                                    category_baseUrl + "/" + mdlSubData.icon),
-                                                colorFilter: ColorFilter.mode(Colors.white10, BlendMode.color),
-                                                fit: BoxFit.scaleDown,
+                        child: Container(
+                          padding: EdgeInsets.only(right: 0),
+                          child: Card(
+                            color: Colors.white,
+                            elevation: 3,
+                            margin: EdgeInsets.all(0.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0.0),
+                            ),
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 3,top: 2),
+                              child:  Container(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.all(2.0),
+                                      child: Container(
+                                        padding: EdgeInsets.only(top: 2, left: 25,right: 25),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 68.00,
+                                              height: 68.00,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(30.0),
+                                                //color: Colors.red,
+                                                image: DecorationImage(
+                                                  scale: 2,
+                                                  image: NetworkImage(
+                                                      category_baseUrl + "/" + mdlSubData.icon),
+                                                  colorFilter: ColorFilter.mode(Colors.white10, BlendMode.color),
+                                                  fit: BoxFit.scaleDown,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: 45,
-                                          ),
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Container(
-                                                  width: MediaQuery.of(context).size.width/2,
-                                                  alignment: Alignment.topLeft,
-                                                  child: Align(
-                                                    alignment: Alignment.centerLeft,
-                                                    child:Text(
-                                                      mdlSubData.categoryName,
-                                                      maxLines: 2,
+                                            SizedBox(
+                                              width: 45,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                    width: MediaQuery.of(context).size.width/2,
+                                                    alignment: Alignment.topLeft,
+                                                    child: Align(
+                                                      alignment: Alignment.centerLeft,
+                                                      child:Text(
+                                                        mdlSubData.categoryName,
+                                                        maxLines: 2,
+                                                        style: TextStyle(
+                                                          overflow: TextOverflow.ellipsis,
+                                                          fontFamily: 'Rubik',
+                                                          fontWeight: FontWeight.w500,
+                                                          color: Colors.black,
+                                                          fontStyle: FontStyle.normal,
+                                                          fontSize: 16.0,
+                                                        ),
+                                                      ) ,
+                                                    )),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Container(
+
+                                                    alignment: Alignment.topLeft,
+                                                    child: Text(
+                                                      'Featured Merchants',
                                                       style: TextStyle(
-                                                        overflow: TextOverflow.ellipsis,
                                                         fontFamily: 'Rubik',
-                                                        fontWeight: FontWeight.w500,
-                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w300,
+                                                        color: Colors.grey,
                                                         fontStyle: FontStyle.normal,
                                                         fontSize: 16.0,
                                                       ),
-                                                    ) ,
-                                                  )),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Container(
-
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(
-                                                    'Featured Merchants',
-                                                    style: TextStyle(
-                                                      fontFamily: 'Rubik',
-                                                      fontWeight: FontWeight.w300,
-                                                      color: Colors.grey,
-                                                      fontStyle: FontStyle.normal,
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  ))
-                                            ],
-                                          )
-                                        ],
+                                                    ))
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  )
+                                    )
 
-                                ],
+                                  ],
+
+                                ),
 
                               ),
-
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
 
-                );
+                  );
                 },
 
-              ),
-            ),
+              )
+            ],
           ),
         ),
       ),

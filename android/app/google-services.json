@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "40584976325",
+    "project_id": "spendzz-b96d0",
+    "storage_bucket": "spendzz-b96d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40584976325:android:3c16affc981b0048dfddac",
+        "android_client_info": {
+          "package_name": "com.spendzz_customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "40584976325-6o336khqg2o89dg964tu3j5abbjgt0kn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuWwuMCg14itotYOc8UCWmqoXtbqicD7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "40584976325-6o336khqg2o89dg964tu3j5abbjgt0kn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
